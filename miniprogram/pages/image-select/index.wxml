@@ -1,0 +1,61 @@
+<!--image-select/index.wxml - 图片选择页面-->
+<view class="page-container">
+  <!-- 页面标题 -->
+  <view class="header-section">
+    <view class="header-title">选择一张共鸣图片</view>
+    <view class="header-subtitle">请选择一张最能引起您内心共鸣的图片，AI将为您生成专属疗愈卡片</view>
+  </view>
+  
+  <!-- 分类选项卡 -->
+  <t-tabs
+    value="{{activeTab}}"
+    bind:change="onTabChange"
+    class="category-tabs"
+    t-class="custom-tabs"
+  >
+    <t-tab-panel 
+      wx:for="{{categories}}" 
+      wx:key="value"
+      label="{{item.label}}" 
+      value="{{item.value}}" 
+    />
+  </t-tabs>
+  
+  <!-- 图片选择网格 -->
+  <view class="image-grid">
+    <view 
+      wx:for="{{filteredImages}}" 
+      wx:key="title"
+      class="image-card {{selectedImage === index ? 'selected' : ''}}"
+      bindtap="selectImage"
+      data-index="{{index}}"
+    >
+      <image src="{{item.src}}" mode="aspectFill" class="image-cover" />
+      <view class="image-title">{{item.title}}</view>
+      <view wx:if="{{selectedImage === index}}" class="image-check">
+        <t-icon name="check" />
+      </view>
+    </view>
+  </view>
+  
+  <!-- 图片含义解释 -->
+  <t-cell-group wx:if="{{selectedImage !== -1}}" class="meaning-card">
+    <t-cell title="选中图片的含义" bordered="{{false}}">
+      <t-icon name="info-circle" class="info-icon" slot="left-icon" />
+      <view slot="description" class="image-meaning">{{filteredImages[selectedImage].meaning}}</view>
+    </t-cell>
+  </t-cell-group>
+  
+  <!-- 生成按钮 -->
+  <t-button
+    theme="primary"
+    block
+    size="large"
+    class="generate-btn"
+    bindtap="generateCard"
+    disabled="{{selectedImage === -1}}"
+  >
+    生成我的疗愈卡片
+    <t-icon name="chevron-right" class="btn-icon" />
+  </t-button>
+</view>

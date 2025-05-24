@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI咖啡轻疗愈 - 原型设计</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FF9D2F;
+            --primary-light: #FFBD6B;
+            --primary-dark: #E67E00;
+            --primary-bg: #FFF8EE;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        .prototype-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: white;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(255, 157, 47, 0.15);
+            margin: 20px;
+            position: relative;
+            border: 1px solid rgba(255, 157, 47, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .phone-frame:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 157, 47, 0.2);
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+            gap: 30px;
+            justify-items: center;
+        }
+        
+        .screen-title {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+        
+        .screen-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-light);
+            border-radius: 3px;
+        }
+        
+        .screen-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .header-subtitle {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="prototype-container">
+        <header class="text-center py-8">
+            <h1 class="text-4xl font-bold">AI咖啡轻疗愈小程序</h1>
+            <p class="text-xl header-subtitle mt-2">原型设计总览</p>
+        </header>
+
+        <div class="screens-grid">
+            <div class="screen-wrapper">
+                <p class="screen-title">1. 选择捕捉方式</p>
+                <div class="phone-frame">
+                    <iframe src="select_method.html" title="选择捕捉方式"></iframe>
+                </div>
+            </div>
+            
+            <div class="screen-wrapper">
+                <p class="screen-title">2. 输入文字</p>
+                <div class="phone-frame">
+                    <iframe src="text_input.html" title="输入文字"></iframe>
+                </div>
+            </div>
+            
+            <div class="screen-wrapper">
+                <p class="screen-title">3. 选择颜色</p>
+                <div class="phone-frame">
+                    <iframe src="color_select.html" title="选择颜色"></iframe>
+                </div>
+            </div>
+            
+            <div class="screen-wrapper">
+                <p class="screen-title">4. 选择图片</p>
+                <div class="phone-frame">
+                    <iframe src="image_select.html" title="选择图片"></iframe>
+                </div>
+            </div>
+            
+            <div class="screen-wrapper">
+                <p class="screen-title">5. 卡片结果 - 文字面</p>
+                <div class="phone-frame">
+                    <iframe src="card_result.html?side=text" title="卡片结果-文字面"></iframe>
+                </div>
+            </div>
+            
+            <div class="screen-wrapper">
+                <p class="screen-title">6. 卡片结果 - 图片面</p>
+                <div class="phone-frame">
+                    <iframe src="card_result.html?side=image" title="卡片结果-图片面"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

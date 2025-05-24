@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>选择捕捉方式</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .method-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .welcome-banner {
+            background: linear-gradient(135deg, #FF9D2F 0%, #FFBD6B 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(255, 157, 47, 0.2);
+            color: white;
+        }
+        .welcome-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .welcome-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .method-card-inner {
+            padding: 24px;
+        }
+        .method-tip {
+            background-color: rgba(255, 157, 47, 0.1);
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wx-container page-transition">
+        <!-- 状态栏 -->
+        <div class="wx-status-bar">
+            <span class="wx-title">AI咖啡轻疗愈</span>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="wx-content">
+            <!-- 欢迎横幅 -->
+            <div class="welcome-banner">
+                <div class="welcome-title">欢迎来到疗愈空间</div>
+                <div class="welcome-subtitle">让我们一起开启内心的平静之旅</div>
+            </div>
+            
+            <div class="grid grid-cols-1 gap-6">
+                <!-- 文字输入方式 -->
+                <a href="text_input.html" class="method-card bg-white">
+                    <div class="method-card-inner flex flex-col items-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-pen-fancy"></i>
+                        </div>
+                        <h2 class="text-xl font-semibold mb-2 theme-dark">文字输入</h2>
+                        <p class="text-gray-600 text-center">通过输入您的想法或感受，让AI捕捉您的情绪</p>
+                        <div class="mt-4 method-tip p-3 text-sm text-gray-600 w-full">
+                            <i class="fas fa-lightbulb theme-primary mr-2"></i>
+                            适合想要表达具体想法的您
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- 颜色选择方式 -->
+                <a href="color_select.html" class="method-card bg-white">
+                    <div class="method-card-inner flex flex-col items-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h2 class="text-xl font-semibold mb-2 theme-dark">颜色选择</h2>
+                        <p class="text-gray-600 text-center">选择一种能代表您当前心情的颜色</p>
+                        <div class="mt-4 method-tip p-3 text-sm text-gray-600 w-full">
+                            <i class="fas fa-lightbulb theme-primary mr-2"></i>
+                            适合通过色彩表达情绪的您
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- 图片选择方式 -->
+                <a href="image_select.html" class="method-card bg-white">
+                    <div class="method-card-inner flex flex-col items-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <h2 class="text-xl font-semibold mb-2 theme-dark">图片选择</h2>
+                        <p class="text-gray-600 text-center">从精选图片中选择一张最能引起您共鸣的图片</p>
+                        <div class="mt-4 method-tip p-3 text-sm text-gray-600 w-full">
+                            <i class="fas fa-lightbulb theme-primary mr-2"></i>
+                            适合视觉型思考者的您
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <!-- <div class="wx-tab-bar">
+            <div class="wx-tab-item active">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div>首页</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div>历史</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>我的</div>
+            </div>
+        </div> -->
+    </div>
+</body>
+</html> 

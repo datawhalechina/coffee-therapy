@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>疗愈卡片</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 450px;
+            margin: 0 auto;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        .card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+        }
+        .card-text {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            background: linear-gradient(135deg, #FFF8EE 0%, #FFE8CC 100%);
+        }
+        .card-quote {
+            font-size: 18px;
+            line-height: 1.6;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        .card-author {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        .tap-hint {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            padding: 8px 16px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            margin: 0 auto;
+            width: fit-content;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.6;
+            }
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            width: 80px;
+            transition: all 0.3s ease;
+        }
+        .action-btn:active {
+            transform: translateY(3px);
+            box-shadow: var(--shadow-sm);
+        }
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .action-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .recommendation-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+        .recommendation-card:active {
+            transform: scale(0.98);
+        }
+        .recommendation-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .recommendation-subtitle {
+            color: var(--text-secondary);
+        }
+        .header-section {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .header-section::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wx-container page-transition">
+        <!-- 状态栏 -->
+        <div class="wx-status-bar">
+            <a href="select_method.html" class="wx-nav-back">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <span class="wx-title">您的疗愈卡片</span>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="wx-content">
+            <div class="header-section text-center">
+                <h1 class="text-xl font-bold theme-dark">今日疗愈卡片</h1>
+                <p class="text-gray-600 text-sm">点击卡片可以翻转查看另一面</p>
+            </div>
+            
+            <!-- 卡片容器 -->
+            <div class="card-container mb-6">
+                <div class="card-inner" id="cardInner">
+                    <!-- 卡片正面 - 图片面 -->
+                    <div class="card-face card-front" id="cardFront">
+                        <div class="tap-hint">
+                            <i class="fas fa-hand-pointer mr-1"></i> 点击翻转
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" class="card-image" alt="卡片图片" id="cardImage">
+                        <div class="card-content">
+                            <h2 class="text-xl font-bold mb-1">宁静时刻</h2>
+                            <p class="text-sm opacity-80">让心灵沉浸在阅读的宁静时光中</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 卡片背面 - 文字面 -->
+                    <div class="card-face card-back" id="cardBack">
+                        <div class="tap-hint text-gray-600">
+                            <i class="fas fa-hand-pointer mr-1"></i> 点击翻转
+                        </div>
+                        <div class="card-text">
+                            <i class="fas fa-quote-left text-3xl theme-light mb-4"></i>
+                            <p class="card-quote" id="cardQuote">
+                                当您沉浸在书中的世界，您的心灵正在获得最真实的休息。阅读不仅是知识的获取，更是心灵的疗愈。请记住，每一页翻动都是一次内心的对话，每一次思考都是自我成长的契机。
+                            </p>
+                            <p class="card-author">— AI咖啡轻疗愈</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="action-buttons">
+                <div class="action-btn">
+                    <div class="action-icon theme-primary">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <div class="action-text">分享</div>
+                </div>
+                
+                <!-- <div class="action-btn">
+                    <div class="action-icon theme-primary">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="action-text">收藏</div>
+                </div>
+                 -->
+                <div class="action-btn">
+                    <div class="action-icon theme-primary">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="action-text">保存</div>
+                </div>
+                
+                <div class="action-btn">
+                    <div class="action-icon theme-primary">
+                        <i class="fas fa-random"></i>
+                    </div>
+                    <div class="action-text">再来一张</div>
+                </div>
+            </div>
+            
+            <!-- 分割线 -->
+            <div class="border-t border-gray-200 my-6"></div>
+            
+            <!-- 相关推荐 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold theme-dark mb-3">您可能还喜欢</h3>
+                <div class="flex overflow-x-auto space-x-4 pb-4" style="scrollbar-width: none;">
+                    <div class="flex-shrink-0 w-40">
+                        <div class="recommendation-card">
+                            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" class="w-full h-24 object-cover" alt="推荐卡片">
+                            <div class="p-2">
+                                <p class="recommendation-title text-sm">咖啡时光</p>
+                                <p class="recommendation-subtitle text-xs">放慢脚步，享受当下</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0 w-40">
+                        <div class="recommendation-card">
+                            <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" class="w-full h-24 object-cover" alt="推荐卡片">
+                            <div class="p-2">
+                                <p class="recommendation-title text-sm">宁静山景</p>
+                                <p class="recommendation-subtitle text-xs">远离喧嚣，寻找平静</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0 w-40">
+                        <div class="recommendation-card">
+                            <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738&q=80" class="w-full h-24 object-cover" alt="推荐卡片">
+                            <div class="p-2">
+                                <p class="recommendation-title text-sm">温暖灯光</p>
+                                <p class="recommendation-subtitle text-xs">家的温馨与舒适</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <!-- <div class="wx-tab-bar">
+            <div class="wx-tab-item active">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div>首页</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div>历史</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>我的</div>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const side = urlParams.get('side');
+        const color = urlParams.get('color');
+        const image = urlParams.get('image');
+        
+        const cardInner = document.getElementById('cardInner');
+        const cardFront = document.getElementById('cardFront');
+        const cardBack = document.getElementById('cardBack');
+        const cardImage = document.getElementById('cardImage');
+        const cardQuote = document.getElementById('cardQuote');
+        
+        // 根据参数设置初始显示的卡片面
+        if (side === 'text') {
+            cardInner.classList.add('flipped');
+        }
+        
+        // 卡片翻转功能
+        cardInner.addEventListener('click', function() {
+            this.classList.toggle('flipped');
+        });
+        
+        // 示例卡片内容
+        const cardContents = {
+            "blue": {
+                image: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1626&q=80",
+                title: "平静海洋",
+                subtitle: "让心灵如海洋般宽广平静",
+                quote: "平静如海的心境，是内心强大的体现。当您面对生活的波涛时，请记住：您的内心可以如同深海一般，表面有波澜，深处却始终平静。"
+            },
+            "red": {
+                image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738&q=80",
+                title: "热情能量",
+                subtitle: "点燃内心的热情与动力",
+                quote: "热情是推动我们前行的燃料。当您感到疲惫时，请回想那些让您心跳加速的时刻，让内心的火焰重新燃起，照亮前行的道路。"
+            },
+            "green": {
+                image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+                title: "自然和谐",
+                subtitle: "在自然中找回内心的平衡",
+                quote: "大自然是最好的治愈师。当您感到迷失或不平衡时，请回归自然，聆听树叶的沙沙声，感受阳光的温暖，让心灵在大自然的怀抱中重获平衡与和谐。"
+            }
+        };
+        
+        // 根据选择的颜色或图片更新卡片内容
+        if (color && cardContents[color]) {
+            const content = cardContents[color];
+            cardImage.src = content.image;
+            cardFront.querySelector('h2').textContent = content.title;
+            cardFront.querySelector('p').textContent = content.subtitle;
+            cardQuote.textContent = content.quote;
+        } else if (image) {
+            // 这里可以根据图片名称设置对应的内容
+            // 简单示例，实际应用中可能需要更复杂的逻辑
+            if (image === "宁静山景") {
+                cardQuote.textContent = "山的宁静给予我们内心的力量。在喧嚣的世界中，请记得为自己留一片宁静的空间，就像高山之巅的那片蓝天，让思绪自由翱翔。";
+            } else if (image === "咖啡时光") {
+                cardQuote.textContent = "一杯咖啡，一段时光。当您品味咖啡的醇香时，也是在品味生活的细节。请放慢脚步，享受这短暂的时光，让心灵在香气中得到片刻的宁静。";
+            }
+        }
+    </script>
+</body>
+</html> 

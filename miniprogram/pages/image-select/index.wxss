@@ -1,0 +1,151 @@
+/* image-select/index.wxss */
+page {
+  background-color: #FFF8EE;
+}
+
+.page-container {
+  padding: 30rpx;
+}
+
+/* 标题部分样式 */
+.header-section {
+  margin-bottom: 40rpx;
+  position: relative;
+}
+
+.header-section::after {
+  content: "";
+  position: absolute;
+  bottom: -10rpx;
+  left: 0;
+  width: 80rpx;
+  height: 6rpx;
+  background-color: #FF9D2F;
+  border-radius: 6rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.header-subtitle {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 分类选项卡样式 */
+.category-tabs {
+  margin-bottom: 30rpx;
+}
+
+.custom-tabs {
+  background-color: transparent !important;
+}
+
+/* 图片网格样式 */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+}
+
+.image-card {
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  position: relative;
+  aspect-ratio: 3/4;
+}
+
+.image-card.selected {
+  transform: scale(1.03);
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.2);
+  border: 6rpx solid white;
+  outline: 4rpx solid #FF9D2F;
+}
+
+.image-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.5s;
+}
+
+.image-card:active .image-cover {
+  transform: scale(1.05);
+}
+
+.image-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  font-weight: 500;
+  font-size: 28rpx;
+}
+
+.image-check {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 56rpx;
+  height: 56rpx;
+  background-color: #FF9D2F;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 图片含义卡片样式 */
+.meaning-card {
+  background-color: white;
+  border-radius: 16rpx;
+  margin-bottom: 40rpx;
+  border-left: 8rpx solid #FF9D2F;
+  box-shadow: 0 4rpx 20rpx rgba(255, 157, 47, 0.1);
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #FF9D2F;
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+}
+
+.info-icon {
+  color: #FF9D2F;
+  margin-right: 10rpx;
+}
+
+.image-meaning {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 生成按钮样式 */
+.generate-btn {
+  border-radius: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FF9D2F;
+  margin-bottom: 30rpx;
+}
+
+.btn-icon {
+  margin-left: 10rpx;
+}

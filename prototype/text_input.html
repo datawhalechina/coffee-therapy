@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字输入</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .text-input-area {
+            min-height: 150px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 157, 47, 0.2);
+            padding: 16px;
+            font-size: 16px;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .text-input-area:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 157, 47, 0.1);
+            outline: none;
+        }
+        .character-count {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+            margin-top: 8px;
+        }
+        .inspiration-card {
+            background-color: rgba(255, 157, 47, 0.05);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 12px;
+        }
+        .example-tag {
+            background-color: white;
+            border: 1px solid rgba(255, 157, 47, 0.2);
+            color: var(--text-secondary);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .example-tag:active {
+            background-color: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+        }
+        .header-section {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .header-section::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wx-container page-transition">
+        <!-- 状态栏 -->
+        <div class="wx-status-bar">
+            <a href="select_method.html" class="wx-nav-back">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <span class="wx-title">文字输入</span>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="wx-content">
+            <div class="header-section">
+                <h1 class="text-xl font-bold theme-dark mb-2">分享您的想法</h1>
+                <p class="text-gray-600 text-sm">请输入您当前的想法、感受或困扰，AI将为您生成专属疗愈卡片</p>
+            </div>
+            
+            <!-- 灵感提示卡片 -->
+            <div class="inspiration-card p-4 mb-6">
+                <h3 class="font-medium theme-primary mb-2">
+                    <i class="fas fa-lightbulb mr-2"></i>灵感提示
+                </h3>
+                <p class="text-sm text-gray-600">您可以尝试描述：</p>
+                <ul class="text-sm text-gray-600 ml-5 mt-1 list-disc">
+                    <li>今天遇到的困难或挑战</li>
+                    <li>您当前的情绪状态</li>
+                    <li>您正在思考的问题</li>
+                    <li>您希望得到的鼓励或建议</li>
+                </ul>
+            </div>
+            
+            <!-- 文本输入区域 -->
+            <div class="mb-6">
+                <textarea class="text-input-area w-full" placeholder="请在这里输入您的想法..." maxlength="200"></textarea>
+                <div class="character-count">0/200</div>
+            </div>
+            
+            <!-- 示例文本快速选择 -->
+            <div class="mb-8">
+                <h3 class="text-sm font-medium text-gray-500 mb-3">或者选择以下示例：</h3>
+                <div class="flex flex-wrap gap-2">
+                    <button class="example-tag">工作压力很大</button>
+                    <button class="example-tag">感到焦虑不安</button>
+                    <button class="example-tag">需要放松心情</button>
+                    <button class="example-tag">寻找生活方向</button>
+                </div>
+            </div>
+            
+            <!-- 生成按钮 -->
+            <a href="card_result.html?side=text" class="primary-btn block text-center w-full py-4">
+                生成我的疗愈卡片
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <!-- <div class="wx-tab-bar">
+            <div class="wx-tab-item active">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div>首页</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div>历史</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>我的</div>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        // 字数统计功能
+        const textarea = document.querySelector('.text-input-area');
+        const charCount = document.querySelector('.character-count');
+        
+        textarea.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = `${length}/200`;
+        });
+        
+        // 示例文本快速选择
+        const exampleButtons = document.querySelectorAll('.example-tag');
+        exampleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                textarea.value = this.textContent;
+                const length = textarea.value.length;
+                charCount.textContent = `${length}/200`;
+                
+                // 移除所有按钮的选中状态
+                exampleButtons.forEach(btn => {
+                    btn.style.backgroundColor = '';
+                    btn.style.color = '';
+                });
+                
+                // 添加选中状态
+                this.style.backgroundColor = 'var(--primary-light)';
+                this.style.color = 'white';
+            });
+        });
+    </script>
+</body>
+</html> 

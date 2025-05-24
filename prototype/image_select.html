@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片选择</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .image-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            aspect-ratio: 3/4;
+        }
+        .image-card:active {
+            transform: scale(0.98);
+            box-shadow: var(--shadow-sm);
+        }
+        .image-card.selected {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-lg);
+            border: 3px solid white;
+            outline: 2px solid var(--primary-color);
+        }
+        .image-card.selected .image-check {
+            display: flex;
+        }
+        .image-check {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .image-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .image-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+        .image-card:hover .image-cover {
+            transform: scale(1.05);
+        }
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .category-tab {
+            padding: 10px 18px;
+            border-radius: 20px;
+            margin-right: 10px;
+            white-space: nowrap;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 157, 47, 0.1);
+        }
+        .category-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        .meaning-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--primary-color);
+        }
+        .header-section {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .header-section::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wx-container page-transition">
+        <!-- 状态栏 -->
+        <div class="wx-status-bar">
+            <a href="select_method.html" class="wx-nav-back">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <span class="wx-title">图片选择</span>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="wx-content">
+            <div class="header-section">
+                <h1 class="text-xl font-bold theme-dark mb-2">选择一张共鸣图片</h1>
+                <p class="text-gray-600 text-sm">请选择一张最能引起您内心共鸣的图片，AI将为您生成专属疗愈卡片</p>
+            </div>
+            
+            <!-- 分类选项卡 -->
+            <div class="category-tabs">
+                <div class="category-tab active">全部</div>
+                <div class="category-tab">自然风景</div>
+                <div class="category-tab">宁静时刻</div>
+                <div class="category-tab">咖啡时光</div>
+                <div class="category-tab">生活细节</div>
+            </div>
+            
+            <!-- 图片选择网格 -->
+            <div class="image-grid mb-8">
+                <!-- 图片1 -->
+                <div class="image-card" data-category="自然风景" data-meaning="宁静的自然风景能让人感到平静与放松">
+                    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" class="image-cover" alt="宁静山景">
+                    <div class="image-title">宁静山景</div>
+                    <div class="image-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <!-- 图片2 -->
+                <div class="image-card" data-category="咖啡时光" data-meaning="咖啡时光代表着放慢脚步，享受当下的美好">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" class="image-cover" alt="咖啡时光">
+                    <div class="image-title">咖啡时光</div>
+                    <div class="image-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <!-- 图片3 -->
+                <div class="image-card" data-category="宁静时刻" data-meaning="阅读是一种心灵的旅行，能让思绪得到放松">
+                    <img src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" class="image-cover" alt="阅读时光">
+                    <div class="image-title">阅读时光</div>
+                    <div class="image-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <!-- 图片4 -->
+                <div class="image-card" data-category="生活细节" data-meaning="温暖的灯光代表着希望和温馨的家庭氛围">
+                    <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738&q=80" class="image-cover" alt="温暖灯光">
+                    <div class="image-title">温暖灯光</div>
+                    <div class="image-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <!-- 图片5 -->
+                <div class="image-card" data-category="自然风景" data-meaning="海洋的宽广让人感到自由与无限可能">
+                    <img src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1626&q=80" class="image-cover" alt="海洋宁静">
+                    <div class="image-title">海洋宁静</div>
+                    <div class="image-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <!-- 图片6 -->
+                <div class="image-card" data-category="生活细节" data-meaning="音乐是心灵的语言，能够抚慰疲惫的心灵">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" class="image-cover" alt="音乐时刻">
+                    <div class="image-title">音乐时刻</div>
+                    <div class="image-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 图片含义解释 -->
+            <div class="meaning-card p-4 mb-8">
+                <h3 class="font-medium theme-primary mb-2">
+                    <i class="fas fa-info-circle mr-2"></i>选中图片的含义
+                </h3>
+                <p class="text-sm text-gray-600" id="imageMeaning">请选择一张图片查看其含义...</p>
+            </div>
+            
+            <!-- 生成按钮 -->
+            <a href="card_result.html?side=image" id="generateBtn" class="primary-btn block text-center w-full py-4 opacity-50 pointer-events-none">
+                生成我的疗愈卡片
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <!-- <div class="wx-tab-bar">
+            <div class="wx-tab-item active">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div>首页</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div>历史</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>我的</div>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        // 图片选择功能
+        const imageCards = document.querySelectorAll('.image-card');
+        const imageMeaning = document.getElementById('imageMeaning');
+        const generateBtn = document.getElementById('generateBtn');
+        let selectedImage = null;
+        
+        imageCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // 移除之前的选中状态
+                imageCards.forEach(c => c.classList.remove('selected'));
+                
+                // 添加新的选中状态
+                this.classList.add('selected');
+                selectedImage = this.querySelector('.image-title').textContent;
+                
+                // 显示图片含义
+                imageMeaning.textContent = this.getAttribute('data-meaning');
+                
+                // 激活生成按钮
+                generateBtn.classList.remove('opacity-50', 'pointer-events-none');
+                generateBtn.href = `card_result.html?side=image&image=${selectedImage}`;
+            });
+        });
+        
+        // 分类选项卡功能
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除之前的选中状态
+                categoryTabs.forEach(t => t.classList.remove('active'));
+                
+                // 添加新的选中状态
+                this.classList.add('active');
+                
+                const category = this.textContent;
+                
+                // 筛选图片
+                if (category === '全部') {
+                    imageCards.forEach(card => card.style.display = 'block');
+                } else {
+                    imageCards.forEach(card => {
+                        if (card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

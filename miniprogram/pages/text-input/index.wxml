@@ -1,0 +1,67 @@
+<!--text-input/index.wxml - 文字输入页面-->
+<view class="page-container">
+  <!-- 页面标题 -->
+  <view class="header-section">
+    <view class="header-title">分享您的想法</view>
+    <view class="header-subtitle">请输入您当前的想法、感受或困扰，AI将为您生成专属疗愈卡片</view>
+  </view>
+  
+  <!-- 灵感提示卡片 -->
+  <t-cell-group class="inspiration-card">
+    <t-cell title="灵感提示" bordered="{{false}}">
+      <t-icon name="tips" class="tip-icon" slot="left-icon" />
+      <view slot="description">
+        <view class="tip-text">您可以尝试描述：</view>
+        <view class="tip-list">
+          <view class="tip-item">· 今天遇到的困难或挑战</view>
+          <view class="tip-item">· 您当前的情绪状态</view>
+          <view class="tip-item">· 您正在思考的问题</view>
+          <view class="tip-item">· 您希望得到的鼓励或建议</view>
+        </view>
+      </view>
+    </t-cell>
+  </t-cell-group>
+  
+  <!-- 文本输入区域 -->
+  <view class="textarea-container">
+    <t-textarea
+      placeholder="请在这里输入您的想法..."
+      maxlength="{{200}}"
+      disableDefaultPadding="{{true}}"
+      autosize
+      value="{{inputText}}"
+      bind:change="onTextChange"
+      class="text-input-area"
+    />
+    <view class="character-count">{{textCount}}/200</view>
+  </view>
+  
+  <!-- 示例文本快速选择 -->
+  <view class="example-section">
+    <view class="example-title">或者选择以下示例：</view>
+    <view class="example-tags">
+      <t-tag
+        wx:for="{{exampleTexts}}"
+        wx:key="index"
+        variant="{{selectedExample === index ? 'light' : 'outline'}}"
+        theme="{{selectedExample === index ? 'primary' : 'default'}}"
+        class="example-tag"
+        bindtap="selectExample"
+        data-index="{{index}}"
+      >{{item}}</t-tag>
+    </view>
+  </view>
+  
+  <!-- 生成按钮 -->
+  <t-button
+    theme="primary"
+    block
+    size="large"
+    class="generate-btn"
+    bindtap="generateCard"
+    disabled="{{!inputText}}"
+  >
+    生成我的疗愈卡片
+    <t-icon name="chevron-right" class="btn-icon" />
+  </t-button>
+</view>

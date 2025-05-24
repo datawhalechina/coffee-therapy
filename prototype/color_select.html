@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>颜色选择</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .color-item {
+            aspect-ratio: 1/1;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .color-item:active {
+            transform: scale(0.95);
+            box-shadow: var(--shadow-sm);
+        }
+        .color-item.selected {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+            border: 3px solid white;
+            outline: 2px solid var(--primary-color);
+        }
+        .color-item.selected::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .color-name {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .color-meaning {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        .meaning-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--primary-color);
+        }
+        .header-section {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .header-section::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wx-container page-transition">
+        <!-- 状态栏 -->
+        <div class="wx-status-bar">
+            <a href="select_method.html" class="wx-nav-back">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+            <span class="wx-title">颜色选择</span>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="wx-content">
+            <div class="header-section">
+                <h1 class="text-xl font-bold theme-dark mb-2">选择代表您心情的颜色</h1>
+                <p class="text-gray-600 text-sm">颜色能反映我们内心的情绪状态，请选择一种最能代表您当前心情的颜色</p>
+            </div>
+            
+            <!-- 颜色选择网格 -->
+            <div class="color-grid mb-8">
+                <!-- 蓝色 -->
+                <div class="color-item" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" data-color="blue" data-meaning="平静、稳定、信任">
+                    <div class="color-name">蓝色</div>
+                </div>
+                
+                <!-- 红色 -->
+                <div class="color-item" style="background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);" data-color="red" data-meaning="热情、力量、激励">
+                    <div class="color-name">红色</div>
+                </div>
+                
+                <!-- 绿色 -->
+                <div class="color-item" style="background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);" data-color="green" data-meaning="成长、和谐、平衡">
+                    <div class="color-name">绿色</div>
+                </div>
+                
+                <!-- 黄色 -->
+                <div class="color-item" style="background: linear-gradient(135deg, #fcb045 0%, #fd1d1d 100%);" data-color="yellow" data-meaning="快乐、创造力、乐观">
+                    <div class="color-name">黄色</div>
+                </div>
+                
+                <!-- 紫色 -->
+                <div class="color-item" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);" data-color="purple" data-meaning="神秘、智慧、灵感">
+                    <div class="color-name">紫色</div>
+                </div>
+                
+                <!-- 橙色 -->
+                <div class="color-item" style="background: linear-gradient(135deg, #f83600 0%, #f9d423 100%);" data-color="orange" data-meaning="活力、温暖、友善">
+                    <div class="color-name">橙色</div>
+                </div>
+                
+                <!-- 粉色 -->
+                <div class="color-item" style="background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);" data-color="pink" data-meaning="爱、温柔、关怀">
+                    <div class="color-name">粉色</div>
+                </div>
+                
+                <!-- 灰色 -->
+                <div class="color-item" style="background: linear-gradient(135deg, #606c88 0%, #3f4c6b 100%);" data-color="gray" data-meaning="中立、平衡、冷静">
+                    <div class="color-name">灰色</div>
+                </div>
+                
+                <!-- 黑色 -->
+                <div class="color-item" style="background: linear-gradient(135deg, #232526 0%, #414345 100%);" data-color="black" data-meaning="力量、优雅、神秘">
+                    <div class="color-name">黑色</div>
+                </div>
+            </div>
+            
+            <!-- 颜色含义解释 -->
+            <!-- <div class="meaning-card p-4 mb-8">
+                <h3 class="font-medium theme-primary mb-2">
+                    <i class="fas fa-info-circle mr-2"></i>选中颜色的含义
+                </h3>
+                <p class="color-meaning" id="colorMeaning">请选择一种颜色查看其含义...</p>
+            </div> -->
+            
+            <!-- 生成按钮 -->
+            <a href="card_result.html?side=image" id="generateBtn" class="primary-btn block text-center w-full py-4 opacity-50 pointer-events-none">
+                生成我的疗愈卡片
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <!-- <div class="wx-tab-bar">
+            <div class="wx-tab-item active">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div>首页</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div>历史</div>
+            </div>
+            <div class="wx-tab-item">
+                <div class="wx-tab-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>我的</div>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        // 颜色选择功能
+        const colorItems = document.querySelectorAll('.color-item');
+        const colorMeaning = document.getElementById('colorMeaning');
+        const generateBtn = document.getElementById('generateBtn');
+        let selectedColor = null;
+        
+        colorItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // 移除之前的选中状态
+                colorItems.forEach(ci => ci.classList.remove('selected'));
+                
+                // 添加新的选中状态
+                this.classList.add('selected');
+                selectedColor = this.getAttribute('data-color');
+                
+                // 显示颜色含义
+                colorMeaning.textContent = this.getAttribute('data-meaning');
+                
+                // 激活生成按钮
+                generateBtn.classList.remove('opacity-50', 'pointer-events-none');
+                generateBtn.href = `card_result.html?side=image&color=${selectedColor}`;
+            });
+        });
+    </script>
+</body>
+</html> 

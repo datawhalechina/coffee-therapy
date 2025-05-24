@@ -1,0 +1,78 @@
+<!--card-result/index.wxml - 卡片结果页面-->
+<view class="page-container">
+  <!-- 页面标题 -->
+  <view class="header-section text-center">
+    <view class="header-title">今日疗愈卡片</view>
+    <view class="header-subtitle">点击卡片可以翻转查看另一面</view>
+  </view>
+  
+  <!-- 卡片容器 -->
+  <view class="card-container">
+    <view class="card-inner {{isFlipped ? 'flipped' : ''}}" bindtap="flipCard">
+      <!-- 卡片正面 - 图片面 -->
+      <view class="card-face card-front">
+        <view class="tap-hint">
+          <t-icon name="help-circle" class="hint-icon" /> 点击翻转
+        </view>
+        <image src="{{cardFront.image}}" mode="aspectFill" class="card-image" />
+        <view class="card-content">
+          <view class="card-content-title">{{cardFront.title}}</view>
+          <view class="card-content-subtitle">{{cardFront.subtitle}}</view>
+        </view>
+      </view>
+      
+      <!-- 卡片背面 - 文字面 -->
+      <view class="card-face card-back">
+        <view class="tap-hint dark">
+          <t-icon name="help-circle" class="hint-icon" /> 点击翻转
+        </view>
+        <view class="card-text">
+          <t-icon name="quote-left" class="quote-icon" />
+          <view class="card-quote">{{cardBack.quote}}</view>
+          <view class="card-author">— AI咖啡轻疗愈</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <t-button variant="text" icon="share" size="large" bindtap="shareCard" class="action-btn">
+      <view class="action-btn-content">
+        <t-icon name="share" class="action-icon" />
+        <view class="action-text">分享</view>
+      </view>
+    </t-button>
+    
+    <t-button variant="text" icon="download" size="large" bindtap="saveCard" class="action-btn">
+      <view class="action-btn-content">
+        <t-icon name="download" class="action-icon" />
+        <view class="action-text">保存</view>
+      </view>
+    </t-button>
+    
+    <t-button variant="text" icon="refresh" size="large" bindtap="regenerateCard" class="action-btn">
+      <view class="action-btn-content">
+        <t-icon name="refresh" class="action-icon" />
+        <view class="action-text">再来一张</view>
+      </view>
+    </t-button>
+  </view>
+  
+  <!-- 分割线 -->
+  <t-divider />
+  
+  <!-- 相关推荐 -->
+  <view class="recommendation-section">
+    <view class="section-title">您可能还喜欢</view>
+    <scroll-view scroll-x enable-flex class="recommendation-scroll">
+      <view class="recommendation-card" wx:for="{{recommendations}}" wx:key="title" bindtap="viewRecommendation" data-index="{{index}}">
+        <image src="{{item.image}}" mode="aspectFill" class="recommendation-image" />
+        <view class="recommendation-info">
+          <view class="recommendation-title">{{item.title}}</view>
+          <view class="recommendation-subtitle">{{item.subtitle}}</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

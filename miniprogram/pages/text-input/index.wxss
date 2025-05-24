@@ -1,0 +1,131 @@
+/* text-input/index.wxss */
+page {
+  background-color: #FFF8EE;
+}
+
+.page-container {
+  padding: 30rpx;
+}
+
+/* 标题部分样式 */
+.header-section {
+  margin-bottom: 40rpx;
+  position: relative;
+}
+
+.header-section::after {
+  content: "";
+  position: absolute;
+  bottom: -10rpx;
+  left: 0;
+  width: 80rpx;
+  height: 6rpx;
+  background-color: #FF9D2F;
+  border-radius: 6rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.header-subtitle {
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 灵感提示卡片样式 */
+.inspiration-card {
+  background-color: rgba(255, 157, 47, 0.05);
+  border-left: 8rpx solid #FF9D2F;
+  border-radius: 16rpx;
+  margin-bottom: 40rpx;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #FF9D2F;
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+}
+
+.tip-icon {
+  color: #FF9D2F;
+  margin-right: 10rpx;
+}
+
+.card-content {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.tip-text {
+  margin-bottom: 10rpx;
+}
+
+.tip-list {
+  padding-left: 10rpx;
+}
+
+.tip-item {
+  margin-bottom: 8rpx;
+}
+
+/* 文本输入区域样式 */
+.textarea-container {
+  margin-bottom: 40rpx;
+}
+
+.text-input-area {
+  background-color: white;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  min-height: 240rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 157, 47, 0.1);
+  margin-bottom: 10rpx;
+}
+
+.character-count {
+  text-align: right;
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 示例文本选择样式 */
+.example-section {
+  margin-bottom: 50rpx;
+}
+
+.example-title {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.example-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.example-tag {
+  margin-right: 0;
+}
+
+/* 生成按钮样式 */
+.generate-btn {
+  border-radius: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FF9D2F;
+  margin-bottom: 30rpx;
+}
+
+.btn-icon {
+  margin-left: 10rpx;
+}
