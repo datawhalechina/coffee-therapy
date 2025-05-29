@@ -10,18 +10,23 @@ cloud.init({
 })
 
 // 获取API密钥
-const ARK_API_KEY = process.env.ARK_API_KEY
+const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY
 
-// 调用ARK API进行聊天补全
-async function chatCompletion(messages, model = 'deepseek-v3-250324', temperature = 0.7, max_tokens = 1000) {
+// 调用阿里云DashScope API进行聊天补全
+async function chatCompletion(messages, model = 'deepseek-v3', temperature = 0.7, max_tokens = 1000) {
   try {
-    console.log('调用ARK API，模型:', model);
+    console.log('调用DashScope API开始，模型:', model);
+    console.log('请求参数:', JSON.stringify({
+      model, 
+      messages: messages.map(m => ({ role: m.role, content: m.content.substring(0, 20) + '...' }))
+    }));
     
+    // 设置更长的超时时间
     const response = await axios({
       method: 'post',
-      url: 'https://ark.cn-beijing.volces.com/api/v3/chat/completions',
+      url: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
       headers: {
-        'Authorization': `Bearer ${ARK_API_KEY}`,
+        'Authorization': `Bearer ${DASHSCOPE_API_KEY}`,
         'Content-Type': 'application/json'
       },
       data: {
@@ -29,14 +34,38 @@ async function chatCompletion(messages, model = 'deepseek-v3-250324', temperatur
         messages: messages,
         temperature: temperature,
         max_tokens: max_tokens
+      },
+      timeout: 50000 // 50秒超时，比云函数的60秒小，确保有时间处理响应
+    });
+    
+    console.log('DashScope API 响应成功，请求ID:', response.headers['x-request-id'] || '未知');
+    return response.data;
+  } catch (error) {
+    // 详细记录错误信息
+    console.error('DashScope API调用失败:', {
+      message: error.message,
+      code: error.code,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      responseData: error.response?.data,
+      config: {
+        url: error.config?.url,
+        method: error.config?.method,
+        timeout: error.config?.timeout
       }
     });
     
-    console.log('ARK API 响应成功');
-    return response.data;
-  } catch (error) {
-    console.error('ARK API调用失败:', error.response ? error.response.data : error.message);
-    throw new Error(error.response ? JSON.stringify(error.response.data) : error.message);
+    // 构建更详细的错误信息
+    let errorMessage = 'DashScope API调用失败: ';
+    if (error.code === 'ECONNABORTED') {
+      errorMessage += '请求超时，请稍后重试';
+    } else if (error.response) {
+      errorMessage += `服务器返回错误 [${error.response.status}]: ${JSON.stringify(error.response.data)}`;
+    } else {
+      errorMessage += error.message;
+    }
+    
+    throw new Error(errorMessage);
   }
 }
 
@@ -138,13 +167,80 @@ exports.main = async (event, context) => {
         // 添加用户新消息
         historyMessages.push({ role: 'user', content: message });
         
-        // 调用API获取回复
-        const response = await chatCompletion(
-          historyMessages, 
-          model || 'deepseek-v3-250324',
-          temperature || 0.7,
-          max_tokens || 1000
-        );
+        // 记录开始请求时间
+        const startTime = Date.now();
+        console.log(`开始请求，会话 ID: ${currentSessionId}`);
+        
+        let response;
+        let modelUsed = model || 'deepseek-v3';
+        let retryCount = 0;
+        const maxRetries = 2;
+        
+        // 带重试的API调用
+        while (retryCount <= maxRetries) {
+          try {
+            // 调用API获取回复
+            response = await chatCompletion(
+              historyMessages, 
+              modelUsed,
+              temperature || 0.7,
+              max_tokens || 1000
+            );
+            break; // 请求成功，跳出循环
+          } catch (apiError) {
+            retryCount++;
+            console.log(`尝试 ${retryCount}/${maxRetries} 失败: ${apiError.message}`);
+            
+            if (retryCount <= maxRetries) {
+              // 如果不是最后一次重试，尝试切换模型
+              if (modelUsed === 'deepseek-v3') {
+                modelUsed = 'mixtral-8x7b';
+                console.log(`切换到备用模型: ${modelUsed}`);
+              } else {
+                modelUsed = 'deepseek-v3-250324';
+                console.log(`切换回默认模型: ${modelUsed}`);
+              }
+              
+              // 等待一小段时间再重试
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            } else {
+              // 所有重试失败后，生成一个模拟响应
+              console.log('所有重试失败，返回模拟响应');
+              
+              // 创建一个简单的模拟响应
+              response = {
+                choices: [{
+                  message: {
+                    role: 'assistant',
+                    content: '非常抱歉，服务器正忙，无法处理您的请求。请稍后再试。'
+                  }
+                }],
+                usage: {
+                  prompt_tokens: 0,
+                  completion_tokens: 0,
+                  total_tokens: 0
+                },
+                isFallbackResponse: true
+              };
+              
+              // 保存用户消息但不保存模拟响应
+              // 这样用户可以稍后再试而不会丢失上下文
+              await saveConversation(wxContext.OPENID, currentSessionId, historyMessages);
+              
+              return {
+                success: true,
+                reply: response.choices[0].message.content,
+                isFallbackResponse: true,
+                error: apiError.message
+              };
+            }
+          }
+        }
+        
+        // 记录完成时间和响应信息
+        const endTime = Date.now();
+        console.log(`请求完成，用时: ${(endTime - startTime) / 1000} 秒`);
+        console.log(`使用模型: ${modelUsed}, 重试次数: ${retryCount}`);
         
         // 添加AI回复到历史
         const assistantMessage = response.choices[0].message;
@@ -157,6 +253,8 @@ exports.main = async (event, context) => {
           success: true,
           reply: assistantMessage.content,
           usage: response.usage,
+          model: modelUsed,
+          responseTime: (endTime - startTime) / 1000,
           history: historyMessages
         };
       } catch (error) {
@@ -177,18 +275,65 @@ exports.main = async (event, context) => {
           };
         }
         
-        // 调用API获取回复
-        const response = await chatCompletion(
-          messages, 
-          model || 'deepseek-v3-250324',
-          temperature || 0.7,
-          max_tokens || 1000
-        );
+        // 记录开始请求时间
+        const startTime = Date.now();
+        console.log(`开始 chat 请求，会话 ID: ${currentSessionId || '无'}`);
+        
+        let response;
+        let modelUsed = model || 'deepseek-v3';
+        let retryCount = 0;
+        const maxRetries = 2;
+        
+        // 带重试的API调用
+        while (retryCount <= maxRetries) {
+          try {
+            // 调用API获取回复
+            response = await chatCompletion(
+              messages, 
+              modelUsed,
+              temperature || 0.7,
+              max_tokens || 1000
+            );
+            break; // 请求成功，跳出循环
+          } catch (apiError) {
+            retryCount++;
+            console.log(`尝试 ${retryCount}/${maxRetries} 失败: ${apiError.message}`);
+            
+            if (retryCount <= maxRetries) {
+              // 如果不是最后一次重试，尝试切换模型
+              if (modelUsed === 'deepseek-v3') {
+                modelUsed = 'qwen-plus';
+                console.log(`切换到备用模型: ${modelUsed}`);
+              } else {
+                modelUsed = 'deepseek-v3';
+                console.log(`切换回默认模型: ${modelUsed}`);
+              }
+              
+              // 等待一小段时间再重试
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            } else {
+              // 所有重试失败后，生成一个模拟响应
+              console.log('所有重试失败，返回模拟响应');
+              
+              return {
+                success: false,
+                isFallbackResponse: true,
+                error: apiError.message,
+                reply: '非常抱歉，服务器正忙，无法处理您的请求。请稍后再试。'
+              };
+            }
+          }
+        }
+        
+        // 记录完成时间和响应信息
+        const endTime = Date.now();
+        console.log(`请求完成，用时: ${(endTime - startTime) / 1000} 秒`);
+        console.log(`使用模型: ${modelUsed}, 重试次数: ${retryCount}`);
         
         // 获取AI回复
         const assistantMessage = response.choices[0].message;
         
-        // 如果有会话ID，保存对话
+        // 如果有会话 ID，保存对话
         if (currentSessionId) {
           const updatedMessages = [...messages, assistantMessage];
           await saveConversation(wxContext.OPENID, currentSessionId, updatedMessages);
@@ -198,7 +343,9 @@ exports.main = async (event, context) => {
           success: true,
           reply: assistantMessage.content,
           message: assistantMessage,
-          usage: response.usage
+          usage: response.usage,
+          model: modelUsed,
+          responseTime: (endTime - startTime) / 1000
         };
       } catch (error) {
         console.error('聊天请求失败:', error);
