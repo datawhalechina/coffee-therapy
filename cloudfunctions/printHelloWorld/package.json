@@ -1,0 +1,15 @@
+{
+  "name": "printhelloworld",
+  "version": "1.0.0",
+  "description": "A cloud function that stores data every 5 seconds",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3",
+    "node-fetch": "^2.6.7"
+  }
+}

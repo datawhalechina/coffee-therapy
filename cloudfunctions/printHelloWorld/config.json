@@ -1,0 +1,9 @@
+{
+  "triggers": [
+    {
+      "name": "printHelloWorld",
+      "type": "timer",
+      "config": "* */5 * * * * *"
+    }
+  ]
+}
