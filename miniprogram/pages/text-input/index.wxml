@@ -52,6 +52,12 @@
     </view>
   </view>
   
+  <!-- 加载状态提示 -->
+  <view class="loading-container" wx:if="{{isLoading}}">
+    <t-loading theme="circular" size="40rpx" />
+    <view class="loading-text">{{loadingText}}</view>
+  </view>
+  
   <!-- 生成按钮 -->
   <t-button
     theme="primary"
@@ -59,9 +65,10 @@
     size="large"
     class="generate-btn"
     bindtap="generateCard"
-    disabled="{{!inputText}}"
+    disabled="{{!inputText || isLoading}}"
+    loading="{{isLoading}}"
   >
     生成我的疗愈卡片
-    <t-icon name="chevron-right" class="btn-icon" />
+    <t-icon name="chevron-right" class="btn-icon" wx:if="{{!isLoading}}" />
   </t-button>
 </view>

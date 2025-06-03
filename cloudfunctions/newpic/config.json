@@ -1,9 +1,16 @@
 {
+  "timeout": 20,
   "triggers": [
     {
       "name": "imageGenBatchProcessor",
       "type": "timer",
       "config": "0 */10 * * * * *"
     }
-  ]
+  ],
+  "permissions": {
+    "openapi": [
+      "cloudbase.file.upload",
+      "cloudbase.file.getTempFileURL"
+    ]
+  }
 }
