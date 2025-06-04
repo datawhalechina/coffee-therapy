@@ -9,7 +9,7 @@ Page({
     hasCustomImage: false,
     cloudEnvId: 'cloud1-4gythsnw8615145d', // 云环境ID
     cardData: {
-      frontImage: 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
+      frontImage: '',
       title: '宁静时刻',
       subtitle: '让心灵沉浸在阅读的宁静时光中',
       quote: '当您沉浸在书中的世界，您的心灵正在获得最真实的休息。阅读不仅是知识的获取，更是心灵的疗愈。请记住，每一页翻动都是一次内心的对话，每一次思考都是自我成长的契机。'

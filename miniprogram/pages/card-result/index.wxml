@@ -19,10 +19,6 @@
         <text class="loading-text">AI正在绘制专属图片...</text>
       </view>
       <t-image src="{{cardData.frontImage}}" mode="aspectFill" class="card-image" />
-      <view class="card-content">
-        <text class="card-title">{{cardData.title}}</text>
-        <text class="card-subtitle">{{cardData.subtitle}}</text>
-      </view>
     </view>
     
     <!-- 卡片背面 - 文字面 -->
@@ -52,28 +48,11 @@
     <text class="action-text">保存</text>
   </view>
   
-  <view class="action-btn" bindtap="handleRefresh">
-    <t-icon name="refresh" size="48rpx" color="#FFB156" />
-    <text class="action-text">再来一张</text>
-  </view>
 </view>
 
 <!-- 分割线 -->
 <t-divider></t-divider>
 
-<!-- 相关推荐 -->
-<view class="recommendations">
-  <text class="section-title">您可能还喜欢</text>
-  <scroll-view scroll-x enable-flex class="recommendation-scroll">
-    <view class="recommendation-card" wx:for="{{recommendations}}" wx:key="index" bindtap="handleRecommendation" data-id="{{item.id}}">
-      <t-image src="{{item.image}}" mode="aspectFill" class="recommendation-image" />
-      <view class="recommendation-info">
-        <text class="recommendation-title">{{item.title}}</text>
-        <text class="recommendation-subtitle">{{item.subtitle}}</text>
-      </view>
-    </view>
-  </scroll-view>
-</view>
 
 <!-- Toast 提示组件 -->
 <t-toast id="t-toast" />

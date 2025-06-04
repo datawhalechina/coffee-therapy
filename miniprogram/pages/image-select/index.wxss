@@ -139,11 +139,16 @@ page {
 /* 生成按钮样式 */
 .generate-btn {
   border-radius: 80rpx;
+  background-color: #FF9D2F;
+  margin-bottom: 30rpx;
+}
+
+/* 按钮内容样式 */
+.btn-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FF9D2F;
-  margin-bottom: 30rpx;
+  flex-direction: row;
 }
 
 .btn-icon {

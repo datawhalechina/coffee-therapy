@@ -21,14 +21,6 @@
     </view>
   </view>
   
-  <!-- 颜色含义解释 -->
-  <t-cell-group wx:if="{{selectedColor !== -1}}" class="meaning-card">
-    <t-cell title="选中颜色的含义" bordered="{{false}}">
-      <t-icon name="info-circle" class="info-icon" slot="left-icon" />
-      <view slot="description" class="color-meaning">{{colors[selectedColor].meaning}}</view>
-    </t-cell>
-  </t-cell-group>
-  
   <!-- 生成按钮 -->
   <t-button
     theme="primary"
@@ -36,9 +28,15 @@
     size="large"
     class="generate-btn"
     bindtap="generateCard"
-    disabled="{{selectedColor === -1}}"
+    disabled="{{selectedColor === -1 || isLoading}}"
+    loading="{{isLoading}}"
   >
-    生成我的疗愈卡片
-    <t-icon name="chevron-right" class="btn-icon" />
+    <view class="btn-content">
+      <text>{{isLoading ? loadingText : '生成我的疗愈卡片'}}</text>
+      <t-icon wx:if="{{!isLoading}}" name="chevron-right" class="btn-icon" />
+    </view>
   </t-button>
 </view>
+
+<!-- 加载提示 -->
+<t-toast id="t-toast" />

@@ -133,6 +133,14 @@
   margin-bottom: 30rpx;
 }
 
+/* 按钮内容样式 */
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
 .btn-icon {
   margin-left: 10rpx;
 }

@@ -55,7 +55,9 @@
     bindtap="generateCard"
     disabled="{{selectedImage === -1}}"
   >
-    生成我的疗愈卡片
-    <t-icon name="chevron-right" class="btn-icon" />
+    <view class="btn-content">
+      <text>生成我的疗愈卡片</text>
+      <t-icon name="chevron-right" class="btn-icon" />
+    </view>
   </t-button>
 </view>
