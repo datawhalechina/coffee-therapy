@@ -53,5 +53,5 @@
   },
   "appid": "wxbff3e621313397bb",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
-  "cloudfunctionRoot": "cloudfunctions"
+  "cloudfunctionRoot": "cloudfunctions/"
 }

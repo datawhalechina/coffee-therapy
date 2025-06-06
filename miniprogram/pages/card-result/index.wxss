@@ -1,287 +1,135 @@
-/* 页面容器 */
+/* General Page Styles */
 page {
-  background-color: #f8f8f8;
-  padding: 30rpx;
+  background-color: #FAF6ED; /* From prototype body */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* From prototype body */
+  color: #333; /* Default text color from prototype body */
+  min-height: 100vh;
   box-sizing: border-box;
 }
 
-/* 顶部标题区域 */
-.header-section {
-  margin-bottom: 40rpx;
-  text-align: center;
-  position: relative;
-}
-
-.header-section::after {
-  content: "";
-  position: absolute;
-  bottom: -20rpx;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  width: 80rpx;
-  height: 6rpx;
-  background-color: #FFB156;
-  border-radius: 6rpx;
-}
-
-.header-title {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
-  display: block;
-  margin-bottom: 10rpx;
-}
-
-.header-desc {
-  font-size: 26rpx;
-  color: #666;
-  display: block;
-}
-
-/* 卡片容器 */
-.card-container {
-  perspective: 2000rpx;
+/* Overall Container for the new layout */
+.container {
   width: 100%;
-  height: 900rpx;
-  margin: 0 auto 60rpx;
-}
-
-.card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.8s;
-  transform-style: preserve-3d;
-}
-
-.card-inner.flipped {
-  transform: rotateY(180deg);
-}
-
-.card-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 40rpx;
-  overflow: hidden;
-  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.1);
-}
-
-.card-front {
-  background-color: #fff;
-}
-
-.card-back {
-  transform: rotateY(180deg);
-}
-
-/* 卡片图片 */
-.card-image {
-  width: 100%;
-  height: 100%;
-  border-radius: 24rpx;
-}
-
-/* 图片加载状态容器 */
-.image-loading-container {
-  position: absolute;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
-  border-radius: 24rpx;
+  padding: 40rpx; /* 20px from prototype body padding */
+  box-sizing: border-box;
+  min-height: 100vh; /* Ensure container itself tries to fill height */
+  align-items: stretch; /* 确保子元素扩展到容器的宽度 */
 }
 
-.custom-loading {
+/* Header from Prototype */
+.header-prototype {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20rpx 0; /* Adjusted padding, prototype was 20px 10px (40rpx 20rpx) */
+  width: 100%;
+  box-sizing: border-box;
   margin-bottom: 20rpx;
 }
 
-.loading-text {
-  color: #ffffff;
-  font-size: 28rpx;
-  text-align: center;
-  padding: 0 30rpx;
+.date-section {
+  text-align: left;
 }
 
-.card-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 40rpx;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  color: white;
-}
-
-.card-title {
-  font-size: 36rpx;
+.date-day {
+  font-size: 72rpx; /* Approx 3em */
   font-weight: bold;
-  display: block;
-  margin-bottom: 10rpx;
+  color: #5C5C5C;
+  line-height: 1;
 }
 
-.card-subtitle {
-  font-size: 26rpx;
-  opacity: 0.8;
-  display: block;
+.date-month-year {
+  font-size: 28rpx; /* Approx 1em */
+  color: #7A7A7A;
+  margin-top: 10rpx; /* 5px */
 }
 
-.card-text {
-  padding: 60rpx;
+.title-prototype {
+  font-size: 28rpx; /* Approx 1em */
+  color: #7A7A7A;
+  text-align: right;
+  padding-top: 10rpx; /* Align more closely with date-month-year if date-day is large */
+}
+
+/* Card from Prototype */
+.card-prototype {
+  background-color: #CBCBE7;
+  border-radius: 40rpx; /* 20px */
+  padding: 50rpx; /* 25px */
+  margin: 30rpx 0; /* Adjusted margin */
+  color: #595880; /* Dark purple text color */
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.08);
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  text-align: center;
-  background: linear-gradient(135deg, #FFF8EE 0%, #FFE8CC 100%);
-  box-sizing: border-box;
+  justify-content: space-between;
+  min-height: 600rpx; /* 最小高度防止卡片缩小 */
+  width: calc(100% - 0rpx); /* 确保卡片宽度填满容器 */
+  box-sizing: border-box; /* 确保padding不会增加宽度 */
+  align-self: center; /* 在父容器中居中 */
 }
 
-.card-quote {
-  font-size: 32rpx;
-  line-height: 1.6;
+.reminder-label {
+  font-size: 26rpx; /* Approx 0.9em */
   font-weight: 500;
-  margin: 40rpx 0;
-  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 1rpx; /* 0.5px */
+  margin-bottom: 10rpx; /* 5px */
 }
 
-.card-author {
-  font-size: 26rpx;
-  color: #666;
-  font-style: italic;
+.reminder-line {
+  height: 2rpx; /* 1px */
+  background-color: #A9A9D0; /* Slightly lighter than text */
+  margin-bottom: 40rpx; /* 20px */
 }
 
-.tap-hint {
-  position: absolute;
-  top: 40rpx;
-  left: 0;
-  right: 0;
+.quote-prototype {
+  font-size: 36rpx; /* Adjusted from 40rpx for better fit, prototype 1.5em */
+  line-height: 1.7;
+  margin-bottom: 40rpx; /* 20px */
+  flex-grow: 1;
+  color: #595880;
+  display: block; /* Ensure text wraps properly */
+  word-break: break-word; /* Handle long text without overflow */
+}
+
+.author-prototype {
+  font-size: 28rpx; /* Approx 1em */
+  text-align: left; /* As per prototype */
+  color: #595880;
+  margin-top: 20rpx; /* Add some space above author if quote is short */
+}
+
+/* Buttons from Prototype */
+.buttons-container-prototype {
+  display: flex;
+  justify-content: space-between;
+  gap: 30rpx; /* 15px */
+  padding: 40rpx 0; /* 20px 0 */
+  width: 100%;
+}
+
+.button-prototype {
+  flex: 1;
+  background-color: #E9E4D9;
+  color: #7A7A7A;
+  border-radius: 50rpx; /* 25px Pill shape */
+  padding: 28rpx 20rpx; /* Adjusted padding */
+  font-size: 28rpx; /* Approx 0.9em */
+  font-weight: 500;
   text-align: center;
-  color: white;
-  font-size: 26rpx;
-  padding: 16rpx 32rpx;
-  background-color: rgba(0,0,0,0.5);
-  border-radius: 40rpx;
-  margin: 0 auto;
-  width: fit-content;
-  display: flex;
-  align-items: center;
-  animation: pulse 2s infinite;
-  z-index: 10;
+  /* Resetting default WXSS button styles */
+  border: none;
+  line-height: normal; /* Important for consistent height */
+  margin: 0; /* Reset default margins */
 }
 
-.tap-hint.dark {
-  background-color: rgba(255,255,255,0.8);
-  color: #666;
+.button-prototype::after { /* Remove default button border for WXSS */
+  border: none;
 }
 
-.hint-text {
-  margin-left: 8rpx;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.6;
-  }
-}
-
-/* 操作按钮 */
-.action-buttons {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 60rpx;
-}
-
-.action-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 24rpx;
-  border-radius: 32rpx;
-  background-color: white;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
-  width: 160rpx;
-  transition: all 0.3s ease;
-}
-
-.action-btn:active {
-  transform: translateY(6rpx);
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
-}
-
-.action-text {
-  font-size: 24rpx;
-  color: #666;
-  margin-top: 16rpx;
-}
-
-/* 相关推荐 */
-.recommendations {
-  margin: 60rpx 0;
-}
-
-.section-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-  display: block;
-  margin-bottom: 30rpx;
-}
-
-.recommendation-scroll {
-  white-space: nowrap;
-  display: flex;
-}
-
-.recommendation-card {
-  display: inline-block;
-  border-radius: 32rpx;
-  overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
-  background-color: white;
-  margin-right: 30rpx;
-  width: 300rpx;
-  flex-shrink: 0;
-}
-
-.recommendation-card:active {
-  transform: scale(0.98);
-}
-
-.recommendation-image {
-  width: 300rpx;
-  height: 200rpx;
-}
-
-.recommendation-info {
-  padding: 20rpx;
-}
-
-.recommendation-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #333;
-  display: block;
-  margin-bottom: 6rpx;
-}
-
-.recommendation-subtitle {
-  font-size: 24rpx;
-  color: #666;
-  display: block;
+.button-prototype:active { /* Simulating hover for touch devices */
+  background-color: #DCD5CA;
 }

@@ -1,58 +1,30 @@
-<!-- 顶部标题区域 -->
-<view class="header-section">
-  <text class="header-title">今日疗愈卡片</text>
-  <text class="header-desc">点击卡片可以翻转查看另一面</text>
-</view>
-
-<!-- 卡片容器 -->
-<view class="card-container" bindtap="flipCard">
-  <view class="card-inner {{isFlipped ? 'flipped' : ''}}">
-    <!-- 卡片正面 - 图片面 -->
-    <view class="card-face card-front">
-      <view class="tap-hint">
-        <t-icon name="time" size="32rpx" color="#fff" />
-        <text class="hint-text">点击翻转</text>
-      </view>
-      <!-- 显示图片加载状态 -->
-      <view wx:if="{{isImageLoading}}" class="image-loading-container">
-        <t-loading theme="dots" size="80rpx" class="custom-loading" />
-        <text class="loading-text">AI正在绘制专属图片...</text>
-      </view>
-      <t-image src="{{cardData.frontImage}}" mode="aspectFill" class="card-image" />
+<!-- Overall container for the new layout -->
+<view class="container">
+  <!-- New Header Section (Date and Title from prototype) -->
+  <view class="header-prototype">
+    <view class="date-section">
+      <view class="date-day">05</view> <!-- Placeholder: Consider making this dynamic -->
+      <view class="date-month-year">Jun 2025</view> <!-- Placeholder: Consider making this dynamic -->
     </view>
-    
-    <!-- 卡片背面 - 文字面 -->
-    <view class="card-face card-back">
-      <view class="tap-hint dark">
-        <t-icon name="time" size="32rpx" color="#666" />
-        <text class="hint-text">点击翻转</text>
-      </view>
-      <view class="card-text">
-        <t-icon name="quote" size="48rpx" color="#FFB156" />
-        <text class="card-quote">{{cardData.quote}}</text>
-        <text class="card-author">— AI咖啡轻疗愈</text>
-      </view>
+    <view class="title-prototype">宇宙漂流瓶</view> <!-- Placeholder: Title from prototype -->
+  </view>
+
+  <!-- Static Card (Content from prototype) -->
+  <view class="card-prototype">
+    <view>
+      <view class="reminder-label">REMINDER</view>
+      <view class="reminder-line"></view> <!-- Styled view to act as hr -->
+      <text class="quote-prototype">{{cardData.quote}}</text>
     </view>
+    <text class="author-prototype">— AI咖啡轻疗愈</text> <!-- Using app-specific author -->
   </view>
+
+  <!-- Updated Action Buttons (Layout from prototype) -->
+  <view class="buttons-container-prototype">
+    <button class="button-prototype" bindtap="handleShare">分享给朋友</button>
+    <button class="button-prototype" bindtap="handleReadAnother">再读一则</button> <!-- New action -->
+  </view>
+
+  <!-- Toast 提示组件 (Kept from original) -->
+  <t-toast id="t-toast" />
 </view>
-
-<!-- 操作按钮 -->
-<view class="action-buttons">
-  <view class="action-btn" bindtap="handleShare">
-    <t-icon name="share" size="48rpx" color="#FFB156" />
-    <text class="action-text">分享</text>
-  </view>
-  
-  <view class="action-btn" bindtap="handleSave">
-    <t-icon name="download" size="48rpx" color="#FFB156" />
-    <text class="action-text">保存</text>
-  </view>
-  
-</view>
-
-<!-- 分割线 -->
-<t-divider></t-divider>
-
-
-<!-- Toast 提示组件 -->
-<t-toast id="t-toast" />

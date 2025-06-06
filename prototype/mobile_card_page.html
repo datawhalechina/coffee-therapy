@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宇宙漂流瓶</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #FAF6ED;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 428px; /* Based on typical mobile screen width */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to the top */
+            padding: 20px 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .date-section {
+            text-align: left;
+        }
+
+        .date-day {
+            font-size: 3em; /* Large day number */
+            font-weight: bold;
+            color: #5C5C5C;
+            line-height: 1;
+        }
+
+        .date-month-year {
+            font-size: 1em;
+            color: #7A7A7A;
+            margin-top: 5px;
+        }
+
+        .title {
+            font-size: 1em;
+            color: #7A7A7A;
+            text-align: right;
+            padding-top: 10px; /* Align with date text */
+        }
+
+        .card {
+            background-color: #CBCBE7;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            color: #595880; /* Dark purple text color from SVG */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes author to bottom */
+        }
+
+        .reminder-label {
+            font-size: 0.9em;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .reminder-line {
+            border: 0;
+            height: 1px;
+            background-color: #A9A9D0; /* Slightly lighter than text for subtlety */
+            margin-bottom: 20px;
+        }
+
+        .quote {
+            font-size: 1.5em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1; /* Allows quote to take up space */
+        }
+
+        .author {
+            font-size: 1em;
+            text-align: left;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px; /* Space between buttons */
+            padding: 20px 0;
+            width: 100%;
+        }
+
+        .button {
+            flex: 1; /* Make buttons take equal width */
+            background-color: #E9E4D9;
+            color: #7A7A7A;
+            border: none;
+            border-radius: 25px; /* Pill shape */
+            padding: 15px 10px;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #DCD5CA;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="date-section">
+                <div class="date-day">05</div>
+                <div class="date-month-year">Jun 2025</div>
+            </div>
+            <div class="title">宇宙漂流瓶</div>
+        </header>
+
+        <main class="card">
+            <div>
+                <div class="reminder-label">REMINDER</div>
+                <hr class="reminder-line">
+                <p class="quote">都会过去的，都会有结果的，只要太阳还在高悬着，一切都还没完呢。</p>
+            </div>
+            <div class="author">吴忠全</div>
+        </main>
+
+        <footer class="buttons-container">
+            <button class="button">分享给朋友</button>
+            <button class="button">再读一则</button>
+        </footer>
+    </div>
+</body>
+</html>
