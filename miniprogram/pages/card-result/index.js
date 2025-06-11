@@ -5,7 +5,9 @@ Page({
   data: {
     cloudEnvId: 'cloud1-4gythsnw8615145d', // 云环境ID
     cardData: {
-      quote: '当您沉浸在书中的世界，您的心灵正在获得最真实的休息。阅读不仅是知识的获取，更是心灵的疗愈。请记住，每一页翻动都是一次内心的对话，每一次思考都是自我成长的契机。'
+      quote: '当您沉浸在书中的世界，您的心灵正在获得最真实的休息。阅读不仅是知识的获取，更是心灵的疗愈。请记住，每一页翻动都是一次内心的对话，每一次思考都是自我成长的契机。',
+      backgroundColor: '#CBCBE7', // 默认背景颜色
+      textColor: '#595880' // 默认文字颜色
     },
     recommendations: [
       {
@@ -29,13 +31,23 @@ Page({
     ],
     cardContents: {
       "blue": {
-        quote: "平静如海的心境，是内心强大的体现。当您面对生活的波涛时，请记住：您的内心可以如同深海一般，表面有波澜，深处却始终平静。"
+        quote: "平静如海的心境，是内心强大的体现。当您面对生活的波涛时，请记住：您的内心可以如同深海一般，表面有波澜，深处却始终平静。",
+        backgroundColor: "#CBCBE7", // 蓝紫色卡片背景
+        textColor: "#595880" // 蓝紫色文字颜色
       },
       "red": {
-        quote: "热情是推动我们前行的燃料。当您感到疲惫时，请回想那些让您心跳加速的时刻，让内心的火焰重新燃起，照亮前行的道路。"
+        quote: "热情是推动我们前行的燃料。当您感到疲惫时，请回想那些让您心跳加速的时刻，让内心的火焰重新燃起，照亮前行的道路。",
+        backgroundColor: "#E7CBCB", // 红色卡片背景
+        textColor: "#805959" // 红色文字颜色
       },
       "green": {
-        quote: "大自然是最好的治愈师。当您感到迷失或不平衡时，请回归自然，聆听树叶的沙沙声，感受阳光的温暖，让心灵在大自然的怀抱中重获平衡与和谐。"
+        quote: "大自然是最好的治愈师。当您感到迷失或不平衡时，请回归自然，聆听树叶的沙沙声，感受阳光的温暖，让心灵在大自然的怀抱中重获平衡与和谐。",
+        backgroundColor: "#CBE7CB", // 绿色卡片背景
+        textColor: "#598059" // 绿色文字颜色
+      },
+      "default": {
+        backgroundColor: "#CBCBE7", // 默认蓝紫色卡片背景
+        textColor: "#595880" // 默认蓝紫色文字颜色
       }
     }
   },
@@ -58,9 +70,20 @@ Page({
     
     let updatedCardData = { ...this.data.cardData };
     
-    // 1. 处理颜色参数，更新卡片引用文本
-    if (color && this.data.cardContents[color] && this.data.cardContents[color].quote) {
-      updatedCardData.quote = this.data.cardContents[color].quote;
+    // 1. 处理颜色参数，更新卡片引用文本和样式
+    if (color && this.data.cardContents[color]) {
+      // 更新引用文本
+      if (this.data.cardContents[color].quote) {
+        updatedCardData.quote = this.data.cardContents[color].quote;
+      }
+      
+      // 更新卡片背景颜色和文字颜色
+      updatedCardData.backgroundColor = this.data.cardContents[color].backgroundColor;
+      updatedCardData.textColor = this.data.cardContents[color].textColor;
+    } else {
+      // 使用默认颜色
+      updatedCardData.backgroundColor = this.data.cardContents.default.backgroundColor;
+      updatedCardData.textColor = this.data.cardContents.default.textColor;
     }
     
     // 2. 处理来自文本输入页的参数
@@ -109,10 +132,21 @@ Page({
       "保持微笑，世界也会对你微笑。",
       "勇敢地追求自己的梦想，不要害怕失败。"
     ];
+    
+    // 同时随机选择一个颜色主题
+    const colorThemes = ['blue', 'red', 'green'];
+    const randomColorIndex = Math.floor(Math.random() * colorThemes.length);
+    const randomColor = colorThemes[randomColorIndex];
+    
     const randomIndex = Math.floor(Math.random() * quotes.length);
+    const selectedTheme = this.data.cardContents[randomColor];
+    
     this.setData({
-      'cardData.quote': quotes[randomIndex]
+      'cardData.quote': quotes[randomIndex],
+      'cardData.backgroundColor': selectedTheme.backgroundColor,
+      'cardData.textColor': selectedTheme.textColor
     });
+    
     Toast({
       context: this,
       selector: '#t-toast',

@@ -1,0 +1,86 @@
+[
+    {
+      "background": "#CBCBE7",
+      "text": "#595880",
+      "color_name": "长春花蓝",
+      "color_name_en": "Periwinkle"
+    },
+    {
+      "background": "#ACBD6F",
+      "text": "#FDF2DA",
+      "color_name": "橄榄绿",
+      "color_name_en": "Olive Green"
+    },
+    {
+      "background": "#FCE2A9",
+      "text": "#F16F33",
+      "color_name": "香草黄",
+      "color_name_en": "Vanilla"
+    },
+    {
+      "background": "#F16F33",
+      "text": "#FCE2A9",
+      "color_name": "橘红",
+      "color_name_en": "Tangerine"
+    },
+    {
+      "background": "#595880",
+      "text": "#CBCBE7",
+      "color_name": "深岩蓝",
+      "color_name_en": "Dark Slate Blue"
+    },
+    {
+      "background": "#C9E4FF",
+      "text": "#324F6D",
+      "color_name": "浅天蓝",
+      "color_name_en": "Light Sky Blue"
+    },
+    {
+      "background": "#94ADFF",
+      "text": "#E9F2FF",
+      "color_name": "矢车菊蓝",
+      "color_name_en": "Cornflower Blue"
+    },
+    {
+      "background": "#FDCFBF",
+      "text": "#5468B6",
+      "color_name": "蜜桃粉",
+      "color_name_en": "Peach"
+    },
+    {
+      "background": "#E77793",
+      "text": "#FDF2DA",
+      "color_name": "玫红色",
+      "color_name_en": "Rose Pink"
+    },
+    {
+      "background": "#B28342",
+      "text": "#FFF1D1",
+      "color_name": "古铜棕",
+      "color_name_en": "Bronze"
+    },
+    {
+      "background": "#C8D980",
+      "text": "#728136",
+      "color_name": "嫩芽绿",
+      "color_name_en": "Pistachio"
+    },
+    {
+      "background": "#FFBCF9",
+      "text": "#AB5FAE",
+      "color_name": "香芋紫",
+      "color_name_en": "Lavender Pink"
+    },
+    {
+      "background": "#F4CDB0",
+      "text": "#D07161",
+      "color_name": "杏色",
+      "color_name_en": "Almond"
+    },
+    {
+      "background": "#265D71",
+      "text": "#CDEDF6",
+      "color_name": "深海蓝",
+      "color_name_en": "Dark Teal"
+    }
+  ]

@@ -9,14 +9,14 @@
     <view class="title-prototype">宇宙漂流瓶</view> <!-- Placeholder: Title from prototype -->
   </view>
 
-  <!-- Static Card (Content from prototype) -->
-  <view class="card-prototype">
+  <!-- Dynamic Card with adjustable colors -->
+  <view class="card-prototype" style="background-color: {{cardData.backgroundColor}}">
     <view>
-      <view class="reminder-label">REMINDER</view>
-      <view class="reminder-line"></view> <!-- Styled view to act as hr -->
-      <text class="quote-prototype">{{cardData.quote}}</text>
+      <view class="reminder-label" style="color: {{cardData.textColor}}">REMINDER</view>
+      <view class="reminder-line" style="background-color: {{cardData.textColor}}"></view> <!-- Styled view to act as hr -->
+      <text class="quote-prototype" style="color: {{cardData.textColor}}">{{cardData.quote}}</text>
     </view>
-    <text class="author-prototype">— AI咖啡轻疗愈</text> <!-- Using app-specific author -->
+    <text class="author-prototype" style="color: {{cardData.textColor}}">— AI咖啡轻疗愈</text> <!-- Using app-specific author -->
   </view>
 
   <!-- Updated Action Buttons (Layout from prototype) -->

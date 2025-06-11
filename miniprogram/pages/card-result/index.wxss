@@ -65,7 +65,7 @@ page {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 600rpx; /* 最小高度防止卡片缩小 */
+  min-height: 400rpx; /* 最小高度防止卡片缩小 */
   width: calc(100% - 0rpx); /* 确保卡片宽度填满容器 */
   box-sizing: border-box; /* 确保padding不会增加宽度 */
   align-self: center; /* 在父容器中居中 */
