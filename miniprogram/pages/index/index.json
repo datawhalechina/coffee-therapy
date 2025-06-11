@@ -1,6 +1,6 @@
 {
   "usingComponents": {
-    "t-icon": "tdesign-miniprogram/icon/icon"
+    "t-icon": "/miniprogram_npm/tdesign-miniprogram/icon/icon"
   },
   "navigationBarTitleText": "AI咖啡轻疗愈"
 }
