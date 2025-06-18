@@ -1,8 +1,8 @@
 /* General Page Styles */
 page {
-  background-color: #FAF6ED; /* From prototype body */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* From prototype body */
-  color: #333; /* Default text color from prototype body */
+  background-color: #F4F0EA; /* 简化背景颜色 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #333;
   min-height: 100vh;
   box-sizing: border-box;
 }
@@ -12,21 +12,21 @@ page {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 40rpx; /* 20px from prototype body padding */
+  padding: 40rpx;
   box-sizing: border-box;
-  min-height: 100vh; /* Ensure container itself tries to fill height */
-  align-items: stretch; /* 确保子元素扩展到容器的宽度 */
+  min-height: 100vh;
+  align-items: stretch;
 }
 
-/* Header from Prototype */
+/* Header from Prototype - 按照图片设计 */
 .header-prototype {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 20rpx 0; /* Adjusted padding, prototype was 20px 10px (40rpx 20rpx) */
+  padding: 20rpx 0;
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 20rpx;
+  margin-bottom: 40rpx;
 }
 
 .date-section {
@@ -34,80 +34,81 @@ page {
 }
 
 .date-day {
-  font-size: 72rpx; /* Approx 3em */
+  font-size: 96rpx; /* 更大的日期数字 */
   font-weight: bold;
-  color: #5C5C5C;
-  line-height: 1;
+  color: #333;
+  line-height: 0.9;
 }
 
 .date-month-year {
-  font-size: 28rpx; /* Approx 1em */
-  color: #7A7A7A;
-  margin-top: 10rpx; /* 5px */
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 10rpx;
 }
 
 .title-prototype {
-  font-size: 28rpx; /* Approx 1em */
-  color: #7A7A7A;
+  font-size: 28rpx;
+  color: #999;
   text-align: right;
-  padding-top: 10rpx; /* Align more closely with date-month-year if date-day is large */
+  padding-top: 10rpx;
 }
 
-/* Card from Prototype */
+/* Card from Prototype - 简化设计，专注文字和颜色 */
 .card-prototype {
   background-color: #CBCBE7;
-  border-radius: 40rpx; /* 20px */
-  padding: 50rpx; /* 25px */
-  margin: 30rpx 0; /* Adjusted margin */
-  color: #595880; /* Dark purple text color */
-  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.08);
+  border-radius: 40rpx;
+  padding: 60rpx 50rpx;
+  margin: 40rpx 0 60rpx 0;
+  color: #595880;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 400rpx; /* 最小高度防止卡片缩小 */
-  width: calc(100% - 0rpx); /* 确保卡片宽度填满容器 */
-  box-sizing: border-box; /* 确保padding不会增加宽度 */
-  align-self: center; /* 在父容器中居中 */
+  min-height: 600rpx; /* 增加最小高度 */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .reminder-label {
-  font-size: 26rpx; /* Approx 0.9em */
+  font-size: 24rpx;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 1rpx; /* 0.5px */
-  margin-bottom: 10rpx; /* 5px */
+  letter-spacing: 2rpx;
+  margin-bottom: 15rpx;
+  opacity: 0.8;
 }
 
 .reminder-line {
-  height: 2rpx; /* 1px */
-  background-color: #A9A9D0; /* Slightly lighter than text */
-  margin-bottom: 40rpx; /* 20px */
+  height: 2rpx;
+  background-color: currentColor;
+  margin-bottom: 50rpx;
+  opacity: 0.6;
 }
 
 .quote-prototype {
-  font-size: 36rpx; /* Adjusted from 40rpx for better fit, prototype 1.5em */
-  line-height: 1.7;
-  margin-bottom: 40rpx; /* 20px */
+  font-size: 40rpx;
+  line-height: 1.8;
+  margin-bottom: 50rpx;
   flex-grow: 1;
-  color: #595880;
-  display: block; /* Ensure text wraps properly */
-  word-break: break-word; /* Handle long text without overflow */
+  display: block;
+  word-break: break-word;
+  font-weight: 400;
 }
 
 .author-prototype {
-  font-size: 28rpx; /* Approx 1em */
-  text-align: left; /* As per prototype */
-  color: #595880;
-  margin-top: 20rpx; /* Add some space above author if quote is short */
+  font-size: 28rpx;
+  text-align: left;
+  margin-top: auto;
+  opacity: 0.8;
 }
 
-/* Buttons from Prototype */
+/* Buttons from Prototype - 简化按钮设计 */
 .buttons-container-prototype {
   display: flex;
   justify-content: space-between;
-  gap: 30rpx; /* 15px */
-  padding: 40rpx 0; /* 20px 0 */
+  gap: 30rpx;
+  padding: 20rpx 0;
   width: 100%;
 }
 
@@ -115,21 +116,21 @@ page {
   flex: 1;
   background-color: #E9E4D9;
   color: #7A7A7A;
-  border-radius: 50rpx; /* 25px Pill shape */
-  padding: 28rpx 20rpx; /* Adjusted padding */
-  font-size: 28rpx; /* Approx 0.9em */
+  border-radius: 50rpx;
+  padding: 32rpx 20rpx;
+  font-size: 28rpx;
   font-weight: 500;
   text-align: center;
-  /* Resetting default WXSS button styles */
   border: none;
-  line-height: normal; /* Important for consistent height */
-  margin: 0; /* Reset default margins */
+  line-height: normal;
+  margin: 0;
 }
 
-.button-prototype::after { /* Remove default button border for WXSS */
+.button-prototype::after {
   border: none;
 }
 
-.button-prototype:active { /* Simulating hover for touch devices */
+.button-prototype:active {
   background-color: #DCD5CA;
+  transform: translateY(2rpx);
 }

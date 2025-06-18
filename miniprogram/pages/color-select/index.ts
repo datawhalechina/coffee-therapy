@@ -18,6 +18,8 @@ interface CardData {
   color: string;
   quote?: string;
   imageTaskId?: string;
+  backgroundColor?: string;
+  textColor?: string;
 }
 
 Component({
@@ -119,11 +121,11 @@ Component({
           name: 'chatgpt',
           data: {
             name: 'sendMessage',
-            message: `根据${selectedColor.name}的特性，给我一段30字以内的疗愈文字。${selectedColor.meaning}`,
-            sessionId: 'color_card_generation_' + Date.now(),
+            message: `基于${selectedColor.name}生成30字以内疗愈文字。`,
+            sessionId: 'color_' + Date.now(),
             model: 'deepseek-v3',
             temperature: 0.7,
-            max_tokens: 300
+            max_tokens: 150
           },
           success: res => {
             console.log('文本生成成功：', res);
@@ -138,68 +140,68 @@ Component({
               const aiReply = result.reply;
               cardData.quote = encodeURIComponent(aiReply);
               
-              // 第二步：调用 newpic 云函数生成图片
-              const imagePrompt = `生成一张体现${selectedColor.name}色调的温暖提升友善温馨的插画，风格简约现代，色调以${selectedColor.name}为主`; // 生成图片的提示词
-              
+              // 第二步：调用 colorsupport 云函数生成颜色
               wx.cloud.callFunction({
-                name: 'newpic',
+                name: 'colorsupport',
                 data: {
-                  name: 'generateImageId',
-                  prompt: imagePrompt,
-                  model: 'wanx2.1-t2i-plus',
-                  size: '1024*1024'
+                  name: 'generateColor',
+                  colorName: selectedColor.name,
+                  colorMeaning: selectedColor.meaning
                 },
-                success: picRes => {
-                  console.log('图片任务创建成功：', picRes);
+                success: colorRes => {
+                  console.log('颜色生成成功：', colorRes);
                   
-                  const picResult = picRes.result as {
+                  const colorResult = colorRes.result as {
                     success: boolean;
-                    taskId: string;
+                    data: {
+                      background: string;
+                      text: string;
+                      color_name: string;
+                      color_name_en: string;
+                    };
                   };
                   
-                  if (picResult && picResult.success) {
-                    // 获取图片任务ID
-                    const imageTaskId = picResult.taskId;
-                    cardData.imageTaskId = imageTaskId;
+                  if (colorResult && colorResult.success && colorResult.data) {
+                    // 获取颜色编码 - 修正字段名称
+                    cardData.backgroundColor = encodeURIComponent(colorResult.data.background);
+                    cardData.textColor = encodeURIComponent(colorResult.data.text);
                     
                     // 跳转到结果页并传递所有参数
                     self.navigateToCardResult(cardData);
                   } else {
-                    // 图片生成失败，但仍然使用文本跳转
-                    console.error('图片生成失败，仅使用文本跳转:', picRes.result);
+                    // 颜色生成失败，使用默认颜色跳转
+                    console.error('颜色生成失败，使用默认颜色跳转:', colorRes.result);
                     self.navigateToCardResult(cardData);
                   }
                 },
-                fail: picErr => {
-                  console.error('图片云函数调用失败：', picErr);
-                  // 图片生成失败，但仍然使用文本跳转
+                fail: colorErr => {
+                  console.error('颜色云函数调用失败：', colorErr);
+                  // 颜色生成失败，使用默认颜色跳转
                   self.navigateToCardResult(cardData);
                 }
               });
             } else {
-              // 处理文本生成错误情况
-              wx.showToast({
-                title: '生成失败，请重试',
-                icon: 'none',
-                duration: 2000
-              });
-              self.setData({
-                isLoading: false,
-                loadingText: ''
-              });
+              // 文本生成失败，使用默认文本跳转
+              console.error('文本生成失败，使用默认文本跳转:', result);
+              cardData.quote = encodeURIComponent('愿你如这色彩般美好。');
+              self.navigateToCardResult(cardData);
             }
           },
           fail: err => {
             console.error('文本云函数调用失败：', err);
+            // 云函数调用失败，使用默认文本直接跳转
+            cardData.quote = encodeURIComponent('愿你如这色彩般美好。');
+            
             wx.showToast({
-              title: '网络错误，请重试',
-              icon: 'none',
-              duration: 2000
+              title: '正在生成卡片...',
+              icon: 'loading',
+              duration: 1000
             });
-            self.setData({
-              isLoading: false,
-              loadingText: ''
-            });
+            
+            // 延迟1秒后跳转，给用户更好的体验
+            setTimeout(() => {
+              self.navigateToCardResult(cardData);
+            }, 1000);
           }
         });
       } catch (error) {
@@ -217,53 +219,54 @@ Component({
     },
     
     // 跳转到卡片结果页
-    navigateToCardResult(cardData: CardData) {
-      try {
-        const self = this as any;
-        // 构建跳转 URL
-        let url = `/pages/card-result/index?color=${cardData.color}`;
-        
-        // 如果有AI生成的引用文本，添加到URL
-        if (cardData.quote) {
-          url += `&quote=${cardData.quote}`;
-        }
-        
-        // 如果有图片任务ID，添加到URL
-        if (cardData.imageTaskId) {
-          url += `&imageTaskId=${cardData.imageTaskId}`;
-        }
-        
-        console.log('准备跳转到:', url);
-        
-        // 执行跳转
-        wx.navigateTo({
-          url: url,
-          success: () => {
-            console.log('成功跳转到卡片结果页');
-          },
-          fail: (err) => {
-            console.error('跳转失败:', err);
-            wx.showToast({
-              title: '跳转失败，请重试',
-              icon: 'none'
-            });
-          },
-          complete: () => {
-            // 重置加载状态
-            self.setData({
-              isLoading: false,
-              loadingText: ''
-            });
-          }
-        });
-      } catch (error) {
-        console.error('跳转结果页时出错:', error);
-        const self = this as any;
-        self.setData({
-          isLoading: false,
-          loadingText: ''
-        });
+    navigateToCardResult(cardData: any) {
+      const self = this as any;
+      
+      // 构建跳转 URL
+      let url = `/pages/card-result/index?color=${cardData.color}&type=color`;
+      
+      // 如果有AI生成的引用文本，添加到URL
+      if (cardData.quote) {
+        url += `&quote=${cardData.quote}`;
       }
+      
+      // 如果有颜色编码，添加到URL
+      if (cardData.backgroundColor && cardData.textColor) {
+        url += `&backgroundColor=${cardData.backgroundColor}&textColor=${cardData.textColor}`;
+      }
+      
+      // 添加云函数调用参数，用于"再读一则"功能
+      const selectedColor = self.data.colors[self.data.selectedColor];
+      const chatgptParams = encodeURIComponent(JSON.stringify({
+        name: 'sendMessage',
+        message: `基于${selectedColor.name}生成30字以内疗愈文字。`,
+        model: 'deepseek-v3',
+        temperature: 0.7,
+        max_tokens: 150
+      }));
+      
+      const colorsupportParams = encodeURIComponent(JSON.stringify({
+        name: 'generateColor',
+        colorName: selectedColor.name,
+        colorMeaning: selectedColor.meaning
+      }));
+      
+      url += `&chatgptParams=${chatgptParams}&colorsupportParams=${colorsupportParams}`;
+      
+      // 执行跳转
+      wx.navigateTo({
+        url: url,
+        success: () => {
+          console.log('成功跳转到卡片结果页');
+        },
+        complete: () => {
+          // 重置加载状态
+          self.setData({
+            isLoading: false,
+            loadingText: ''
+          });
+        }
+      });
     }
   },
   

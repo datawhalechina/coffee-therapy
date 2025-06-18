@@ -3,10 +3,10 @@
   <!-- New Header Section (Date and Title from prototype) -->
   <view class="header-prototype">
     <view class="date-section">
-      <view class="date-day">05</view> <!-- Placeholder: Consider making this dynamic -->
-      <view class="date-month-year">Jun 2025</view> <!-- Placeholder: Consider making this dynamic -->
+      <view class="date-day">{{currentDate.day}}</view>
+      <view class="date-month-year">{{currentDate.monthYear}}</view>
     </view>
-    <view class="title-prototype">宇宙漂流瓶</view> <!-- Placeholder: Title from prototype -->
+    <view class="title-prototype">宇宙漂流瓶</view>
   </view>
 
   <!-- Dynamic Card with adjustable colors -->
@@ -16,7 +16,7 @@
       <view class="reminder-line" style="background-color: {{cardData.textColor}}"></view> <!-- Styled view to act as hr -->
       <text class="quote-prototype" style="color: {{cardData.textColor}}">{{cardData.quote}}</text>
     </view>
-    <text class="author-prototype" style="color: {{cardData.textColor}}">— AI咖啡轻疗愈</text> <!-- Using app-specific author -->
+    <text class="author-prototype" style="color: {{cardData.textColor}}">— 爱你的咖啡</text> <!-- Using app-specific author -->
   </view>
 
   <!-- Updated Action Buttons (Layout from prototype) -->

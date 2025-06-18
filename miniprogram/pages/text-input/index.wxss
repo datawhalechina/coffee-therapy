@@ -1,8 +1,11 @@
 /* text-input/index.wxss */
+page {
+  background-color: #FFF8EE;
+}
 
 .page-container {
   padding: 30rpx;
-  background-color: #fff;
+  background-color: #FFF8EE;
   min-height: 100vh;
   box-sizing: border-box;
 }

@@ -55,5 +55,27 @@
         </view>
       </view>
     </view>
+
+    <!-- 直接生成疗愈卡片 -->
+    <view
+      class="method-card special-card"
+      bindtap="generateDirectCard"
+    >
+      <view class="method-card-inner">
+        <t-icon name="star" class="feature-icon" />
+        <view class="method-title">随机疗愈</view>
+        <view class="method-desc">让AI为您生成一张专属的疗愈卡片</view>
+        <view class="method-tip">
+          <t-icon name="tips" class="tip-icon" /> 适合想要惊喜的您
+        </view>
+      </view>
+      <!-- 加载状态指示器 -->
+      <view class="loading-overlay" wx:if="{{isLoading}}">
+        <view class="loading-content">
+          <t-icon name="loading" class="loading-icon" />
+          <view class="loading-text">{{loadingText}}</view>
+        </view>
+      </view>
+    </view>
   </view>
 </view>

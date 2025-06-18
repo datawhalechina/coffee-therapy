@@ -116,3 +116,65 @@ page {
 .nickname-input {
   flex: 1;
 }
+
+/* 特殊卡片样式 */
+.special-card {
+  position: relative;
+  background: linear-gradient(135deg, #FF9D2F 0%, #FFB84D 50%, #FF8A00 100%);
+  color: white;
+}
+
+.special-card .method-card-inner {
+  color: white;
+}
+
+.special-card .feature-icon {
+  color: white;
+}
+
+.special-card .method-tip {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* 加载状态覆盖层 */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 24rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.loading-icon {
+  font-size: 48rpx;
+  margin-bottom: 16rpx;
+  animation: rotate 1s linear infinite;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  text-align: center;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

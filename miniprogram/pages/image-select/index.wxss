@@ -36,15 +36,6 @@ page {
   color: #666;
 }
 
-/* 分类选项卡样式 */
-.category-tabs {
-  margin-bottom: 30rpx;
-}
-
-.custom-tabs {
-  background-color: transparent !important;
-}
-
 /* 图片网格样式 */
 .image-grid {
   display: grid;
@@ -63,7 +54,7 @@ page {
 }
 
 .image-card.selected {
-  transform: scale(1.03);
+  transform: scale(1.02);
   box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.2);
   border: 6rpx solid white;
   outline: 4rpx solid #FF9D2F;
@@ -90,6 +81,7 @@ page {
   color: white;
   font-weight: 500;
   font-size: 28rpx;
+  text-align: left;
 }
 
 .image-check {
