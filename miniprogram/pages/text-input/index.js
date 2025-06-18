@@ -69,7 +69,12 @@ Component({
         name: 'chatgpt',
         data: {
           name: 'sendMessage',
-          message: `根据用户情绪"${text}"生成30字以内疗愈文字。`,
+          message: `你是一位职场心理疗愈师，基于用户情绪：${text}，生成<15字的英文肯定句。要求：" 
+2. 英文示例风格："Release the pressure, you are enough"
+3. 必须为 **纯中文** 或 **纯英文** 
+4. 禁止中英混杂
+5. 用"你/你的"或泛称句式传递无条件的支持。
+7.除了一句话之外其他都不输出`,
           sessionId: 'text_' + Date.now(),
           model: 'deepseek-v3',
           temperature: 0.7,

@@ -121,7 +121,12 @@ Component({
           name: 'chatgpt',
           data: {
             name: 'sendMessage',
-            message: `你是一位心理学疗愈专家，精通颜色疗法。基于用户选择颜色${selectedColor.name}以及含义${selectedColor.meaning}，生成一个30字以内的激励文本。`,
+            message: `你是一位职场能量疗愈师，基于${selectedColor.name}（${selectedColor.meaning}），生成<10字的行动肯定短语。要求：
+1.使用祈使句/行动动词主导 
+2. 如「突破吧！」「向前！」的爆发式短句 
+3. 可中英混合（"Let's go!"） 
+4. 禁止"我"字开头及弱化词 
+5. 输出纯文本无标点`,
             sessionId: 'color_' + Date.now(),
             model: 'deepseek-v3',
             temperature: 0.7,
@@ -145,7 +150,7 @@ Component({
                 name: 'colorsupport',
                 data: {
                   name: 'generateColor',
-                  colorName: selectedColor.name,
+                  colorName: selectedColor.meaning,
                   colorMeaning: selectedColor.meaning
                 },
                 success: colorRes => {
