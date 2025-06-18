@@ -8,7 +8,7 @@ Component({
     images: [
       {
         title: '自然风光类',
-        src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80',
+        src: 'cloud://cloud1-4gythsnw8615145d.636c-cloud1-4gythsnw8615145d-1360168413/generated_images/自然风光.png',
         category: 'nature',
         meaning: '宁静的自然风景能让人感到平静与放松，远离喧嚣，让心灵回归最纯净的状态。'
       },
