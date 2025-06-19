@@ -1,0 +1,142 @@
+{
+    "红": [
+      {
+        "name": "玫红色",
+        "hex": "#E77793",
+        "name_en": "Rose Pink",
+        "category": "暖色系",
+        "hue_range": [330, 360],
+        "background": "#E77793",
+        "text": "#FDF2DA"
+      },
+      {
+        "name": "蜜桃粉",
+        "hex": "#FDCFBF",
+        "name_en": "Peach",
+        "category": "暖色系",
+        "hue_range": [15, 25],
+        "background": "#FDCFBF",
+        "text": "#5468B6"
+      }
+    ],
+    "橙": [
+      {
+        "name": "橘红",
+        "hex": "#F16F33",
+        "name_en": "Tangerine",
+        "category": "暖色系",
+        "hue_range": [20, 30],
+        "background": "#F16F33",
+        "text": "#FCE2A9"
+      },
+      {
+        "name": "古铜棕",
+        "hex": "#B28342",
+        "name_en": "Bronze",
+        "category": "暖色系",
+        "hue_range": [35, 45],
+        "background": "#B28342",
+        "text": "#FFF1D1"
+      }
+    ],
+    "黄": [
+      {
+        "name": "香草黄",
+        "hex": "#FCE2A9",
+        "name_en": "Vanilla",
+        "category": "暖色系",
+        "hue_range": [45, 55],
+        "background": "#FCE2A9",
+        "text": "#F16F33"
+      },
+      {
+        "name": "杏色",
+        "hex": "#F4CDB0",
+        "name_en": "Almond",
+        "category": "暖色系",
+        "hue_range": [30, 40],
+        "background": "#F4CDB0",
+        "text": "#D07161"
+      }
+    ],
+    "绿": [
+      {
+        "name": "橄榄绿",
+        "hex": "#ACBD6F",
+        "name_en": "Olive Green",
+        "category": "冷色系",
+        "hue_range": [70, 80],
+        "background": "#ACBD6F",
+        "text": "#FDF2DA"
+      },
+      {
+        "name": "嫩芽绿",
+        "hex": "#C8D980",
+        "name_en": "Pistachio",
+        "category": "冷色系",
+        "hue_range": [75, 85],
+        "background": "#C8D980",
+        "text": "#728136"
+      }
+    ],
+    "青": [
+      {
+        "name": "深海蓝",
+        "hex": "#265D71",
+        "name_en": "Dark Teal",
+        "category": "冷色系",
+        "hue_range": [190, 200],
+        "background": "#265D71",
+        "text": "#CDEDF6"
+      },
+      {
+        "name": "浅天蓝",
+        "hex": "#C9E4FF",
+        "name_en": "Light Sky Blue",
+        "category": "冷色系",
+        "hue_range": [210, 220],
+        "background": "#C9E4FF",
+        "text": "#324F6D"
+      }
+    ],
+    "蓝": [
+      {
+        "name": "矢车菊蓝",
+        "hex": "#94ADFF",
+        "name_en": "Cornflower Blue",
+        "category": "冷色系",
+        "hue_range": [225, 235],
+        "background": "#94ADFF",
+        "text": "#E9F2FF"
+      },
+      {
+        "name": "长春花蓝",
+        "hex": "#CBCBE7",
+        "name_en": "Periwinkle",
+        "category": "冷色系",
+        "hue_range": [240, 250],
+        "background": "#CBCBE7",
+        "text": "#595880"
+      }
+    ],
+    "紫": [
+      {
+        "name": "香芋紫",
+        "hex": "#FFBCF9",
+        "name_en": "Lavender Pink",
+        "category": "冷色系",
+        "hue_range": [300, 310],
+        "background": "#FFBCF9",
+        "text": "#AB5FAE"
+      },
+      {
+        "name": "深岩蓝",
+        "hex": "#595880",
+        "name_en": "Dark Slate Blue",
+        "category": "冷色系",
+        "hue_range": [250, 260],
+        "background": "#595880",
+        "text": "#CBCBE7"
+      }
+    ]
+  }

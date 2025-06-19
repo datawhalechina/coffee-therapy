@@ -1,0 +1,6 @@
+{
+  "note": "请在部署前创建一个.env文件，包含以下内容，并替换YOUR_API_KEY为您的实际API密钥",
+  "example": {
+    "DASHSCOPE_API_KEY": "YOUR_API_KEY"
+  }
+}
