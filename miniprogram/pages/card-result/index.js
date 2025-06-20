@@ -94,8 +94,8 @@ Page({
     if (options.chatgptParams) {
       this.chatgptParams = JSON.parse(decodeURIComponent(options.chatgptParams));
     }
-    if (options.colorsupportParams) {
-      this.colorsupportParams = JSON.parse(decodeURIComponent(options.colorsupportParams));
+    if (options.colorpsychologyParams) {
+      this.colorpsychologyParams = JSON.parse(decodeURIComponent(options.colorpsychologyParams));
     }
     
     const { color = '', text = '', quote = '', backgroundColor = '', textColor = '', type = '' } = options;
@@ -162,7 +162,7 @@ Page({
     console.log('Read Another button tapped');
     
     // 如果有保存的云函数参数，重新调用云函数
-    if (this.chatgptParams && this.colorsupportParams) {
+    if (this.chatgptParams && this.colorpsychologyParams) {
       // 显示加载状态
       wx.showLoading({
         title: '正在生成新的疗愈内容...',
@@ -186,10 +186,10 @@ Page({
             newQuote = result.reply;
           }
           
-          // 第二步：调用colorsupport云函数生成新颜色
+          // 第二步：调用colorpsychology云函数生成新颜色
           wx.cloud.callFunction({
-            name: 'colorsupport',
-            data: this.colorsupportParams,
+            name: 'colorpsychology',
+            data: this.colorpsychologyParams,
             success: colorRes => {
               console.log('再读一则-颜色生成成功：', colorRes);
               
@@ -197,9 +197,9 @@ Page({
               let newTextColor = this.data.cardData.textColor;
               
               const colorResult = colorRes.result;
-              if (colorResult && colorResult.success && colorResult.data) {
-                newBackgroundColor = colorResult.data.background;
-                newTextColor = colorResult.data.text;
+              if (colorResult && colorResult.success && colorResult.selectedColor) {
+                newBackgroundColor = colorResult.selectedColor.background;
+                newTextColor = colorResult.selectedColor.text;
               }
               
               // 更新卡片数据

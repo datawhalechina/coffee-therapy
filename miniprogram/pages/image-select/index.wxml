@@ -16,20 +16,11 @@
       data-index="{{index}}"
     >
       <image src="{{item.src}}" mode="aspectFill" class="image-cover" />
-      <view class="image-title">{{item.title}}</view>
       <view wx:if="{{selectedImage === index}}" class="image-check">
         <t-icon name="check" />
       </view>
     </view>
   </view>
-  
-  <!-- 图片含义解释 -->
-  <t-cell-group wx:if="{{selectedImage !== -1}}" class="meaning-card">
-    <t-cell title="选中图片的含义" bordered="{{false}}">
-      <t-icon name="info-circle" class="info-icon" slot="left-icon" />
-      <view slot="description" class="image-meaning">{{images[selectedImage].meaning}}</view>
-    </t-cell>
-  </t-cell-group>
   
   <!-- 生成按钮 -->
   <t-button

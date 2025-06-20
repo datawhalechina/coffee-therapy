@@ -8,37 +8,37 @@ Component({
     images: [
       {
         title: '自然风光类',
-        src: 'cloud://cloud1-4gythsnw8615145d.636c-cloud1-4gythsnw8615145d-1360168413/generated_images/自然风光.png',
+        src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80',
         category: 'nature',
         meaning: '宁静的自然风景能让人感到平静与放松，远离喧嚣，让心灵回归最纯净的状态。'
       },
       {
-        title: '追寻场景类',
-        src: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80',
+        title: '温馨尝尽类',
+        src: 'https://pic.ibaotu.com/23/08/31/aigc/1146495116022915182.png!ww7002',
         category: 'coffee',
         meaning: '咖啡时光代表着放慢脚步，享受当下的美好。品味生活的细节，让心灵获得片刻的宁静。'
       },
       {
         title: '抽象艺术类',
-        src: 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80',
+        src: 'https://n.sinaimg.cn/sinacn20111/43/w900h743/20190425/663e-hvvuiyn9518053.jpg',
         category: 'peaceful',
         meaning: '阅读是一种心灵的旅行，能让思绪得到放松。在书中寻找智慧，在字里行间找到共鸣。'
       },
       {
-        title: '跨晚家征类',
-        src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1738&q=80',
+        title: '意向类',
+        src: 'https://puui.qpic.cn/vpic_cover/x3106lj860k/x3106lj860k_hz.jpg/1280',
         category: 'lifestyle',
         meaning: '温暖的灯光代表着希望和温馨的家庭氛围，在柔和的光线中，找到内心的安定与平静。'
       },
       {
         title: '海洋蓝调类',
-        src: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1626&q=80',
+        src: 'https://tse3-mm.cn.bing.net/th/id/OIP-C.JbRCpud1xMZ0234XTeEk1gHaHa?rs=1&pid=ImgDetMain&cb=idpwebp2&o=7&rm=3',
         category: 'nature',
         meaning: '海洋的宽广让人感到自由与无限可能，面对大海，我们的烦恼显得渺小，心胸也随之开阔。'
       },
       {
         title: '音乐律动类',
-        src: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80',
+        src: 'https://pic.ibaotu.com/23/05/15/translate/1107597315306442782.png!ww7002',
         category: 'lifestyle',
         meaning: '音乐是心灵的语言，能够抚慰疲惫的心灵，让情绪得到释放，找到内心的平衡。'
       }
@@ -99,23 +99,21 @@ Component({
             const aiReply = result.reply;
             cardData.quote = encodeURIComponent(aiReply);
             
-            // 第二步：调用 colorsupport 云函数生成颜色（简化参数）
+            // 第二步：调用 colorpsychology 云函数生成颜色（简化参数）
             wx.cloud.callFunction({
-              name: 'colorsupport',
+              name: 'colorpsychology',
               data: {
-                name: 'generateColor',
-                imageTitle: selectedImage.title,
-                imageCategory: selectedImage.category
+                text: `用户选择了图片：${selectedImage.title}，类别：${selectedImage.category}`
               },
               success: colorRes => {
                 console.log('颜色生成成功：', colorRes);
                 
                 const colorResult = colorRes.result as any;
                 
-                if (colorResult && colorResult.success && colorResult.data) {
-                  // 获取颜色编码 - 修正字段名称
-                  cardData.backgroundColor = encodeURIComponent(colorResult.data.background);
-                  cardData.textColor = encodeURIComponent(colorResult.data.text);
+                if (colorResult && colorResult.success && colorResult.selectedColor) {
+                  // 获取颜色编码 - 使用 selectedColor 对象
+                  cardData.backgroundColor = encodeURIComponent(colorResult.selectedColor.background);
+                  cardData.textColor = encodeURIComponent(colorResult.selectedColor.text);
                 }
                 
                 // 跳转到结果页并传递所有参数
@@ -180,13 +178,11 @@ Component({
         max_tokens: 150
       }));
       
-      const colorsupportParams = encodeURIComponent(JSON.stringify({
-        name: 'generateColor',
-        imageTitle: selectedImage.title,
-        imageCategory: selectedImage.category
+      const colorpsychologyParams = encodeURIComponent(JSON.stringify({
+        text: `用户选择了图片：${selectedImage.title}，类别：${selectedImage.category}`
       }));
       
-      url += `&chatgptParams=${chatgptParams}&colorsupportParams=${colorsupportParams}`;
+      url += `&chatgptParams=${chatgptParams}&colorpsychologyParams=${colorpsychologyParams}`;
       
       // 执行跳转
       wx.navigateTo({

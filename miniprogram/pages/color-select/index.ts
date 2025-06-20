@@ -145,20 +145,18 @@ Component({
               const aiReply = result.reply;
               cardData.quote = encodeURIComponent(aiReply);
 
-              // 第二步：调用 colorsupport 云函数生成颜色
+              // 第二步：调用 colorpsychology 云函数生成颜色
               wx.cloud.callFunction({
-                name: 'colorsupport',
+                name: 'colorpsychology',
                 data: {
-                  name: 'generateColor',
-                  colorName: selectedColor.meaning,
-                  colorMeaning: selectedColor.meaning
+                  text: `用户选择了颜色：${selectedColor.name}，含义：${selectedColor.meaning}`
                 },
                 success: colorRes => {
                   console.log('颜色生成成功：', colorRes);
 
                   const colorResult = colorRes.result as {
                     success: boolean;
-                    data: {
+                    selectedColor: {
                       background: string;
                       text: string;
                       color_name: string;
@@ -166,10 +164,10 @@ Component({
                     };
                   };
 
-                  if (colorResult && colorResult.success && colorResult.data) {
-                    // 获取颜色编码 - 修正字段名称
-                    cardData.backgroundColor = encodeURIComponent(colorResult.data.background);
-                    cardData.textColor = encodeURIComponent(colorResult.data.text);
+                  if (colorResult && colorResult.success && colorResult.selectedColor) {
+                    // 获取颜色编码 - 使用 selectedColor 对象
+                    cardData.backgroundColor = encodeURIComponent(colorResult.selectedColor.background);
+                    cardData.textColor = encodeURIComponent(colorResult.selectedColor.text);
 
                     // 跳转到结果页并传递所有参数
                     self.navigateToCardResult(cardData);
@@ -250,13 +248,11 @@ Component({
         max_tokens: 150
       }));
 
-      const colorsupportParams = encodeURIComponent(JSON.stringify({
-        name: 'generateColor',
-        colorName: selectedColor.name,
-        colorMeaning: selectedColor.meaning
+      const colorpsychologyParams = encodeURIComponent(JSON.stringify({
+        text: `用户选择了颜色：${selectedColor.name}，含义：${selectedColor.meaning}`
       }));
 
-      url += `&chatgptParams=${chatgptParams}&colorsupportParams=${colorsupportParams}`;
+      url += `&chatgptParams=${chatgptParams}&colorpsychologyParams=${colorpsychologyParams}`;
 
       // 执行跳转
       wx.navigateTo({

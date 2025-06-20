@@ -52,23 +52,21 @@ Component({
             const aiReply = result.reply;
             cardData.quote = encodeURIComponent(aiReply);
             
-            // 第二步：调用 colorsupport 云函数生成随机颜色
+            // 第二步：调用 colorpsychology 云函数生成随机颜色
             wx.cloud.callFunction({
-              name: 'colorsupport',
+              name: 'colorpsychology',
               data: {
-                name: 'generateColor',
-                randomMode: true,
-                context: '随机疗愈卡片'
+                text: '生成温暖疗愈的随机颜色'
               },
               success: colorRes => {
                 console.log('随机颜色生成成功：', colorRes);
                 
                 const colorResult = colorRes.result as any;
                 
-                if (colorResult && colorResult.success && colorResult.data) {
-                  // 获取颜色编码 - 修正字段名称
-                  cardData.backgroundColor = encodeURIComponent(colorResult.data.background);
-                  cardData.textColor = encodeURIComponent(colorResult.data.text);
+                if (colorResult && colorResult.success && colorResult.selectedColor) {
+                  // 获取颜色编码 - 使用 selectedColor 对象
+                  cardData.backgroundColor = encodeURIComponent(colorResult.selectedColor.background);
+                  cardData.textColor = encodeURIComponent(colorResult.selectedColor.text);
                 }
                 
                 // 跳转到结果页并传递所有参数
@@ -130,13 +128,11 @@ Component({
         max_tokens: 150
       }));
       
-      const colorsupportParams = encodeURIComponent(JSON.stringify({
-        name: 'generateColor',
-        randomMode: true,
-        context: '随机疗愈卡片'
+      const colorpsychologyParams = encodeURIComponent(JSON.stringify({
+        text: '生成温暖疗愈的随机颜色'
       }));
       
-      url += `&chatgptParams=${chatgptParams}&colorsupportParams=${colorsupportParams}`;
+      url += `&chatgptParams=${chatgptParams}&colorpsychologyParams=${colorpsychologyParams}`;
       
       const self = this as any;
       
