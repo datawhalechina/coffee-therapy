@@ -11,10 +11,10 @@ Component({
     loadingText: '', // 加载提示文本
     cloudEnvId: 'cloud1-4gythsnw8615145d' // 云环境ID
   },
-  
+
   lifetimes: {
     // 在组件实例被创建时执行
-    attached: function() {
+    attached: function () {
       // 初始化云环境
       if (!wx.cloud) {
         console.error('请使用 2.2.3 或以上的基础库以使用云能力');
@@ -27,34 +27,34 @@ Component({
       }
     }
   },
-  
+
   methods: {
     // 文本输入变化事件
-    onTextChange: function(e) {
+    onTextChange: function (e) {
       const text = e.detail.value || '';
       this.setData({
         inputText: text,
         textCount: text.length
       });
     },
-    
+
     // 选择示例文本
-    selectExample: function(e) {
+    selectExample: function (e) {
       const index = e.currentTarget.dataset.index;
       const text = this.data.exampleTexts[index];
-      
+
       this.setData({
         selectedExample: index,
         inputText: text,
         textCount: text.length
       });
     },
-    
+
     // 生成卡片
-    generateCard: function() {
+    generateCard: function () {
       const text = this.data.inputText;
       if (!text) return;
-      
+
       this.setData({
         isLoading: true,
         loadingText: '正在生成您的专属卡片...'
@@ -82,14 +82,14 @@ Component({
         },
         success: res => {
           console.log('文本生成成功：', res);
-          
+
           const result = res.result;
-          
+
           if (result && result.success) {
             // 获取AI生成的回复
             const aiReply = result.reply;
             cardData.quote = encodeURIComponent(aiReply);
-            
+
             // 第二步：调用 colorpsychology 云函数生成颜色
             wx.cloud.callFunction({
               name: 'colorpsychology',
@@ -99,15 +99,15 @@ Component({
               },
               success: colorRes => {
                 console.log('颜色生成成功：', colorRes);
-                
+
                 const colorResult = colorRes.result;
-                
+
                 if (colorResult && colorResult.success && colorResult.selectedColor) {
                   // 获取颜色编码 - 使用 selectedColor 对象
                   cardData.backgroundColor = encodeURIComponent(colorResult.selectedColor.background);
                   cardData.textColor = encodeURIComponent(colorResult.selectedColor.text);
                 }
-                
+
                 // 跳转到结果页并传递所有参数
                 this.navigateToCardResult(cardData);
               },
@@ -128,13 +128,13 @@ Component({
           console.error('文本云函数调用失败：', err);
           // 云函数调用失败，使用默认文本直接跳转
           cardData.quote = encodeURIComponent('愿你内心平静，拥抱美好。');
-          
+
           wx.showToast({
             title: '正在生成卡片...',
             icon: 'loading',
             duration: 1000
           });
-          
+
           // 延迟1秒后跳转，给用户更好的体验
           setTimeout(() => {
             this.navigateToCardResult(cardData);
@@ -142,39 +142,44 @@ Component({
         }
       });
     },
-    
+
     // 跳转到卡片结果页
-    navigateToCardResult: function(cardData) {
+    navigateToCardResult: function (cardData) {
       // 构建跳转 URL
       let url = `/pages/card-result/index?text=${cardData.text}&type=text`;
-      
+
       // 如果有AI生成的引用文本，添加到URL
       if (cardData.quote) {
         url += `&quote=${cardData.quote}`;
       }
-      
+
       // 如果有颜色编码，添加到URL
       if (cardData.backgroundColor && cardData.textColor) {
         url += `&backgroundColor=${cardData.backgroundColor}&textColor=${cardData.textColor}`;
       }
-      
+
       // 添加云函数调用参数，用于"再读一则"功能
       const userText = decodeURIComponent(cardData.text);
       const chatgptParams = encodeURIComponent(JSON.stringify({
         name: 'sendMessage',
-        message: `根据用户情绪"${userText}"生成30字以内疗愈文字。`,
+        message: `你是一位职场能量疗愈师，基于${userText}，生成<10字的行动肯定短语。要求：
+1.使用祈使句/行动动词主导 
+2. 如「突破吧！」「向前！」的爆发式短句 
+3. 可中英混合（"Let's go!"） 
+4. 禁止"我"字开头及弱化词 
+5. 输出纯文本无标点`,
         model: 'deepseek-v3',
         temperature: 0.7,
         max_tokens: 200
       }));
-      
+
       const colorpsychologyParams = encodeURIComponent(JSON.stringify({
         name: 'analyzeColor',
         text: userText
       }));
-      
+
       url += `&chatgptParams=${chatgptParams}&colorpsychologyParams=${colorpsychologyParams}`;
-      
+
       // 执行跳转
       wx.navigateTo({
         url: url,

@@ -26,7 +26,7 @@ Component({
       
       self.setData({
         isLoading: true,
-        loadingText: '正在为您生成专属疗愈卡片...'
+        loadingText: '正在为您生成专属专属卡片...'
       });
       
       const cardData: any = {};
@@ -122,7 +122,7 @@ Component({
       // 添加云函数调用参数，用于"再读一则"功能
       const chatgptParams = encodeURIComponent(JSON.stringify({
         name: 'sendMessage',
-        message: '生成30字以内温暖疗愈文字。',
+        message: '你是一位职场能量疗愈师，请说些鼓励鼓舞的话，生成<20字的行动肯定短语。要求：1.使用祈使句/行动动词主导 2. 如「突破吧！」「向前！」的爆发式短句 3. 禁止"我"字开头及弱化词 5. 输出纯文本无标点',
         model: 'deepseek-v3',
         temperature: 0.8,
         max_tokens: 150

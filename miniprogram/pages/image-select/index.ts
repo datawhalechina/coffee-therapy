@@ -10,37 +10,37 @@ Component({
         title: '自然风光类',
         src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80',
         category: 'nature',
-        meaning: '宁静的自然风景能让人感到平静与放松，远离喧嚣，让心灵回归最纯净的状态。'
+        meaning: '当前存在压力，希望缓解工作压力'
       },
       {
         title: '温馨尝尽类',
         src: 'https://pic.ibaotu.com/23/08/31/aigc/1146495116022915182.png!ww7002',
         category: 'coffee',
-        meaning: '咖啡时光代表着放慢脚步，享受当下的美好。品味生活的细节，让心灵获得片刻的宁静。'
+        meaning: '有社交烦恼，改善社交焦虑'
       },
       {
         title: '抽象艺术类',
         src: 'https://n.sinaimg.cn/sinacn20111/43/w900h743/20190425/663e-hvvuiyn9518053.jpg',
         category: 'peaceful',
-        meaning: '阅读是一种心灵的旅行，能让思绪得到放松。在书中寻找智慧，在字里行间找到共鸣。'
+        meaning: '激发创造力，希望有所启发，坚守自我'
       },
       {
         title: '意向类',
         src: 'https://puui.qpic.cn/vpic_cover/x3106lj860k/x3106lj860k_hz.jpg/1280',
         category: 'lifestyle',
-        meaning: '温暖的灯光代表着希望和温馨的家庭氛围，在柔和的光线中，找到内心的安定与平静。'
+        meaning: '创伤后成长，希望能有所安抚'
       },
       {
         title: '海洋蓝调类',
         src: 'https://tse3-mm.cn.bing.net/th/id/OIP-C.JbRCpud1xMZ0234XTeEk1gHaHa?rs=1&pid=ImgDetMain&cb=idpwebp2&o=7&rm=3',
         category: 'nature',
-        meaning: '海洋的宽广让人感到自由与无限可能，面对大海，我们的烦恼显得渺小，心胸也随之开阔。'
+        meaning: '希望提升专注力，得到鼓励'
       },
       {
         title: '音乐律动类',
         src: 'https://pic.ibaotu.com/23/05/15/translate/1107597315306442782.png!ww7002',
         category: 'lifestyle',
-        meaning: '音乐是心灵的语言，能够抚慰疲惫的心灵，让情绪得到释放，找到内心的平衡。'
+        meaning: '处理代际创伤，得到安抚快乐'
       }
     ]
   },
@@ -83,7 +83,12 @@ Component({
         name: 'chatgpt',
         data: {
           name: 'sendMessage',
-          message: `基于图片${selectedImage.title}，生成30字以内的疗愈文字。`,
+          message: `你是一位职场能量疗愈师，基于${selectedImage.meaning}，生成<10字的行动肯定短语。要求：
+1.使用祈使句/行动动词主导 
+2. 如「突破吧！」「向前！」的爆发式短句 
+3. 可中英混合（"Let's go!"） 
+4. 禁止"我"字开头及弱化词 
+5. 输出纯文本无标点`,
           sessionId: 'img_' + Date.now(),
           model: 'deepseek-v3',
           temperature: 0.7,
@@ -103,7 +108,7 @@ Component({
             wx.cloud.callFunction({
               name: 'colorpsychology',
               data: {
-                text: `用户选择了图片：${selectedImage.title}，类别：${selectedImage.category}`
+                text: `${selectedImage.meaning}`
               },
               success: colorRes => {
                 console.log('颜色生成成功：', colorRes);
