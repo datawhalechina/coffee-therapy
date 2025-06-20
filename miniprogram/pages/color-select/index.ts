@@ -108,7 +108,7 @@ Component({
 
         self.setData({
           isLoading: true,
-          loadingText: '正在生成您的疗愈卡片...'
+          loadingText: '正在生成您的专属卡片...'
         });
 
         // 创建一个对象存储云函数返回的数据

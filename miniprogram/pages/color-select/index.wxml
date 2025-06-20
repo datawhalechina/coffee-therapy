@@ -32,7 +32,7 @@
     loading="{{isLoading}}"
   >
     <view class="btn-content">
-      <text>{{isLoading ? loadingText : '生成我的疗愈卡片'}}</text>
+      <text>{{isLoading ? loadingText : '生成我的专属卡片'}}</text>
       <t-icon wx:if="{{!isLoading}}" name="chevron-right" class="btn-icon" />
     </view>
   </t-button>

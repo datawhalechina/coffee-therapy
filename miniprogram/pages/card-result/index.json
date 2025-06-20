@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "您的疗愈卡片",
+  "navigationBarTitleText": "您的专属卡片",
   "usingComponents": {
     "t-icon": "tdesign-miniprogram/icon/icon",
     "t-button": "tdesign-miniprogram/button/button",

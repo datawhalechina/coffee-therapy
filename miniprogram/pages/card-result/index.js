@@ -9,7 +9,7 @@ Page({
       monthYear: ''
     },
     cardData: {
-      quote: '当您沉浸在书中的世界，您的心灵正在获得最真实的休息。阅读不仅是知识的获取，更是心灵的疗愈。请记住，每一页翻动都是一次内心的对话，每一次思考都是自我成长的契机。',
+      quote: '当您沉浸在书中的世界，您的心灵正在获得最真实的休息。请记住，每一页翻动都是一次内心的对话，每一次思考都是自我成长的契机。',
       backgroundColor: '#CBCBE7', // 默认背景颜色
       textColor: '#595880' // 默认文字颜色
     },
@@ -141,7 +141,7 @@ Page({
       Toast({
         context: this,
         selector: '#t-toast',
-        message: '疗愈卡片已生成',
+        message: '专属卡片已生成',
         theme: 'success',
         duration: 1500
       });
@@ -165,7 +165,7 @@ Page({
     if (this.chatgptParams && this.colorpsychologyParams) {
       // 显示加载状态
       wx.showLoading({
-        title: '正在生成新的疗愈内容...',
+        title: '正在生成新的专属内容...',
         mask: true
       });
       
@@ -213,7 +213,7 @@ Page({
               Toast({
                 context: this,
                 selector: '#t-toast',
-                message: '已更新疗愈内容',
+                message: '已更新专属内容',
                 theme: 'success',
                 duration: 1000
               });
@@ -229,7 +229,7 @@ Page({
               Toast({
                 context: this,
                 selector: '#t-toast',
-                message: '已更新疗愈内容',
+                message: '已更新专属内容',
                 theme: 'success',
                 duration: 1000
               });
@@ -258,7 +258,7 @@ Page({
           Toast({
             context: this,
             selector: '#t-toast',
-            message: '已更新疗愈内容',
+            message: '已更新专属内容',
             theme: 'success',
             duration: 1000
           });
@@ -289,7 +289,7 @@ Page({
       Toast({
         context: this,
         selector: '#t-toast',
-        message: '已更新疗愈内容',
+        message: '已更新专属内容',
         theme: 'success',
         duration: 1000
       });

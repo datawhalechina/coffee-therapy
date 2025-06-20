@@ -2,7 +2,7 @@
 <view class="page-container">
   <!-- 欢迎横幅 -->
   <view class="welcome-banner">
-    <view class="welcome-title">欢迎来到疗愈空间</view>
+    <view class="welcome-title">欢迎来到咖啡空间</view>
     <view class="welcome-subtitle">让我们一起开启内心的平静之旅</view>
   </view>
   
@@ -63,8 +63,8 @@
     >
       <view class="method-card-inner">
         <t-icon name="star" class="feature-icon" />
-        <view class="method-title">随机疗愈</view>
-        <view class="method-desc">让AI为您生成一张专属的疗愈卡片</view>
+        <view class="method-title">随机生成</view>
+        <view class="method-desc">让AI为您生成一张专属卡片</view>
         <view class="method-tip">
           <t-icon name="tips" class="tip-icon" /> 适合想要惊喜的您
         </view>

@@ -3,7 +3,7 @@
   <!-- 页面标题 -->
   <view class="header-section">
     <view class="header-title">分享您的想法</view>
-    <view class="header-subtitle">请输入您当前的想法、感受或困扰，AI将为您生成专属疗愈卡片</view>
+    <view class="header-subtitle">请输入您当前的想法、感受或困扰，AI将为您生成专属卡片</view>
   </view>
   
   <!-- 灵感提示卡片 -->
@@ -64,7 +64,7 @@
     loading="{{isLoading}}"
   >
     <view class="btn-content">
-      <text>生成我的疗愈卡片</text>
+      <text>生成专属卡片</text>
       <t-icon name="chevron-right" class="btn-icon" wx:if="{{!isLoading}}" />
     </view>
   </t-button>
