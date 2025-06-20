@@ -69,12 +69,13 @@ Component({
         name: 'chatgpt',
         data: {
           name: 'sendMessage',
-          message: `你是一位职场心理疗愈师，基于用户情绪：${text}，生成<15字的英文肯定句。要求：" 
-2. 英文示例风格："Release the pressure, you are enough"
-3. 必须为 **纯中文** 或 **纯英文** 
-4. 禁止中英混杂
-5. 用"你/你的"或泛称句式传递无条件的支持。
-7.除了一句话之外其他都不输出`,
+          message: `你是一位擅长写意境诗句的心灵导师。基于用户分享的心情：${text}，请创作一句回应的话，要求：
+1. 字数不超过30字
+2. 以"记住"、"原来"、"其实"、"从此"等词开头
+3. 表达对用户心情的理解和启发
+4. 意境优美，给人深刻的思考和感悟
+5. 能引发职场人的内心共鸣
+6. 只输出这一句话，不要其他内容`,
           sessionId: 'text_' + Date.now(),
           model: 'deepseek-v3',
           temperature: 0.7,
@@ -162,12 +163,13 @@ Component({
       const userText = decodeURIComponent(cardData.text);
       const chatgptParams = encodeURIComponent(JSON.stringify({
         name: 'sendMessage',
-        message: `你是一位职场能量疗愈师，基于${userText}，生成<10字的行动肯定短语。要求：
-1.使用祈使句/行动动词主导 
-2. 如「突破吧！」「向前！」的爆发式短句 
-3. 可中英混合（"Let's go!"） 
-4. 禁止"我"字开头及弱化词 
-5. 输出纯文本无标点`,
+        message: `你是一位擅长写意境诗句的心灵导师。基于用户分享的心情：${userText}，请创作一句回应的话，要求：
+1. 字数不超过30字
+2. 以"记住"、"原来"、"其实"、"从此"等词开头
+3. 表达对用户心情的理解和启发
+4. 意境优美，给人深刻的思考和感悟
+5. 能引发职场人的内心共鸣
+6. 只输出这一句话，不要其他内容`,
         model: 'deepseek-v3',
         temperature: 0.7,
         max_tokens: 200

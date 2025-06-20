@@ -83,12 +83,13 @@ Component({
         name: 'chatgpt',
         data: {
           name: 'sendMessage',
-          message: `你是一位职场能量疗愈师，基于${selectedImage.meaning}，生成<10字的行动肯定短语。要求：
-1.使用祈使句/行动动词主导 
-2. 如「突破吧！」「向前！」的爆发式短句 
-3. 可中英混合（"Let's go!"） 
-4. 禁止"我"字开头及弱化词 
-5. 输出纯文本无标点`,
+          message: `你是一位擅长写意境诗句的心灵导师。基于用户选择的图片寓意：${selectedImage.meaning}，请创作一句富有画面感的话，要求：
+1. 字数不超过30字
+2. 以"让我们"、"原来"、"总有"等词开头
+3. 将图片意境与人生感悟相结合
+4. 表达优美，意境深远
+5. 能引发职场人对生活的思考
+6. 只输出这一句话，不要其他内容`,
           sessionId: 'img_' + Date.now(),
           model: 'deepseek-v3',
           temperature: 0.7,
@@ -177,7 +178,13 @@ Component({
       const selectedImage = self.data.images[self.data.selectedImage];
       const chatgptParams = encodeURIComponent(JSON.stringify({
         name: 'sendMessage',
-        message: `基于图片${selectedImage.title}，生成30字以内的疗愈文字。`,
+        message: `你是一位擅长写意境诗句的心灵导师。基于用户选择的图片寓意：${selectedImage.title}，请创作一句富有画面感的话，要求：
+1. 字数不超过30字
+2. 以"让我们"、"原来"、"总有"等词开头
+3. 将图片意境与人生感悟相结合
+4. 表达优美，意境深远
+5. 能引发职场人对生活的思考
+6. 只输出这一句话，不要其他内容`,
         model: 'deepseek-v3',
         temperature: 0.7,
         max_tokens: 150

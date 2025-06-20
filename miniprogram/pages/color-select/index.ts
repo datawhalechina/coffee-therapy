@@ -121,12 +121,13 @@ Component({
           name: 'chatgpt',
           data: {
             name: 'sendMessage',
-            message: `你是一位职场能量疗愈师，基于${selectedColor.name}（${selectedColor.meaning}），生成<10字的行动肯定短语。要求：
-1.使用祈使句/行动动词主导 
-2. 如「突破吧！」「向前！」的爆发式短句 
-3. 可中英混合（"Let's go!"） 
-4. 禁止"我"字开头及弱化词 
-5. 输出纯文本无标点`,
+            message: `你是一位擅长写意境诗句的心灵导师。基于用户选择的颜色寓意：${selectedColor.meaning}，请创作一句富有诗意的话，要求：
+1. 字数不超过30字
+2. 以"愿你"、"总会"、"相信"等词开头
+3. 将颜色的象征意义与人生感悟相结合
+4. 表达温暖而有力量
+5. 能给职场人带来心灵的触动和启发
+6. 只输出这一句话，不要其他内容`,
             sessionId: 'color_' + Date.now(),
             model: 'deepseek-v3',
             temperature: 0.7,
@@ -242,7 +243,13 @@ Component({
       const selectedColor = self.data.colors[self.data.selectedColor];
       const chatgptParams = encodeURIComponent(JSON.stringify({
         name: 'sendMessage',
-        message: `基于${selectedColor.name}生成30字以内疗愈文字。`,
+        message: `你是一位擅长写意境诗句的心灵导师。基于用户选择的颜色寓意：${selectedColor.name}，请创作一句富有诗意的话，要求：
+1. 字数不超过30字
+2. 以"愿你"、"总会"、"相信"等词开头
+3. 将颜色的象征意义与人生感悟相结合
+4. 表达温暖而有力量
+5. 能给职场人带来心灵的触动和启发
+6. 只输出这一句话，不要其他内容`,
         model: 'deepseek-v3',
         temperature: 0.7,
         max_tokens: 150

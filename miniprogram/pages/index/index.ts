@@ -36,7 +36,7 @@ Component({
         name: 'chatgpt',
         data: {
           name: 'sendMessage',
-          message: '生成30字以内温暖疗愈文字。',
+          message: '你是一位擅长写意境诗句的心灵导师。请创作一句30字以内的人生感悟，要求：1. 以"从今天开始"、"记住"、"愿你"等词开头 2. 表达自我认同、内在成长或生命感悟 3. 意境优美，触动人心 4. 给予职场人积极的力量 5. 只输出这一句话，不要其他内容',
           sessionId: 'direct_' + Date.now(),
           model: 'deepseek-v3',
           temperature: 0.8,
@@ -122,7 +122,7 @@ Component({
       // 添加云函数调用参数，用于"再读一则"功能
       const chatgptParams = encodeURIComponent(JSON.stringify({
         name: 'sendMessage',
-        message: '你是一位职场能量疗愈师，请说些鼓励鼓舞的话，生成<20字的行动肯定短语。要求：1.使用祈使句/行动动词主导 2. 如「突破吧！」「向前！」的爆发式短句 3. 禁止"我"字开头及弱化词 5. 输出纯文本无标点',
+        message: '你是一位擅长写意境诗句的心灵导师。请创作一句30字以内的人生感悟，要求：1. 以"从今天开始"、"记住"、"愿你"等词开头 2. 表达自我认同、内在成长或生命感悟 3. 意境优美，触动人心 4. 给予职场人积极的力量 5. 只输出这一句话，不要其他内容',
         model: 'deepseek-v3',
         temperature: 0.8,
         max_tokens: 150
