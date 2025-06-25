@@ -40,21 +40,7 @@
       </view>
     </view>
 
-    <!-- 图片选择方式 -->
-    <view
-      class="method-card"
-      data-url="/pages/image-select/index"
-      bindtap="navigateTo"
-    >
-      <view class="method-card-inner">
-        <t-icon name="image" class="feature-icon" />
-        <view class="method-title">图片选择</view>
-        <view class="method-desc">从精选图片中选择一张最能引起您共鸣的图片</view>
-        <view class="method-tip">
-          <t-icon name="tips" class="tip-icon" /> 适合视觉型思考者的您
-        </view>
-      </view>
-    </view>
+
 
     <!-- 直接生成疗愈卡片 -->
     <view

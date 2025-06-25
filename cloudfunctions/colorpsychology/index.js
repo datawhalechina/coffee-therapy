@@ -5,7 +5,8 @@ const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 
 cloud.init({
-  env: 'cloud1-4gythsnw8615145d'
+    env: cloud.DYNAMIC_CURRENT_ENV,
+    traceUser: true
 })
 
 // 获取API密钥

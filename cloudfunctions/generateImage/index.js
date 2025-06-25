@@ -4,7 +4,8 @@ const fs = require('fs')
 const path = require('path')
 
 cloud.init({
-  env: 'cloud1-4gythsnw8615145d'
+    env: cloud.DYNAMIC_CURRENT_ENV,
+    traceUser: true
 })
 
 // 从 prompt.json 文件导入提示词模板

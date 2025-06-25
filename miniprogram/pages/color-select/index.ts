@@ -243,13 +243,12 @@ Component({
       const selectedColor = self.data.colors[self.data.selectedColor];
       const chatgptParams = encodeURIComponent(JSON.stringify({
         name: 'sendMessage',
-        message: `你是一位擅长写意境诗句的心灵导师。基于用户选择的颜色寓意：${selectedColor.name}，请创作一句富有诗意的话，要求：
-1. 字数不超过30字
-2. 以"愿你"、"总会"、"相信"等词开头
-3. 将颜色的象征意义与人生感悟相结合
-4. 表达温暖而有力量
-5. 能给职场人带来心灵的触动和启发
-6. 只输出这一句话，不要其他内容`,
+        message: `你是一位专业心灵导师，擅长用一句话触发职场人的内在共鸣。  基于用户分享的心情 ${selectedColor.name}，请生成一句中英文对照的“彩虹卡”式疗愈语句，要求：  
+        1. 只输出一句完整话语，先中文后英文；  
+        2. 不超过20字（中文）+ 20字（英文）；  
+        3. 富有温度与安全感，无需前置主题词；  
+        4. 留有“空白”感，让用户自行投射与解读；  
+        5. 适合职场场景，能引发内心共鸣。`,
         model: 'deepseek-v3',
         temperature: 0.7,
         max_tokens: 150
