@@ -1,4 +1,5 @@
 // text-input/index.js
+import config from '../../config/env';
 
 Component({
   data: {
@@ -9,7 +10,7 @@ Component({
     selectedExample: -1, // -1 表示未选择任何示例
     isLoading: false, // 加载状态
     loadingText: '', // 加载提示文本
-    cloudEnvId: 'cloud1-4gythsnw8615145d' // 云环境ID
+    cloudEnvId: config.cloudEnv // 云环境ID
   },
 
   lifetimes: {

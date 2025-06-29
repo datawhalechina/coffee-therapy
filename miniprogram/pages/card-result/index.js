@@ -1,9 +1,10 @@
 // 获取toast实例
 import Toast from 'tdesign-miniprogram/toast/index';
+import config from '../../config/env';
 
 Page({
   data: {
-    cloudEnvId: 'cloud1-4gythsnw8615145d', // 云环境ID
+    cloudEnvId: config.cloudEnv, // 云环境ID
     currentDate: {
       day: '',
       monthYear: ''

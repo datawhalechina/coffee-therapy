@@ -1,5 +1,6 @@
 // index.ts
 // 选择捕捉方式页面
+import config from '../../config/env';
 
 Component({
   data: {
@@ -190,7 +191,7 @@ Component({
         console.error('请使用 2.2.3 或以上的基础库以使用云能力');
       } else {
         wx.cloud.init({
-          env: 'cloud1-4gythsnw8615145d',
+          env: config.cloudEnv,
           traceUser: true,
         });
         
