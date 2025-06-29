@@ -4,7 +4,8 @@
     "t-icon": "tdesign-miniprogram/icon/icon",
     "t-cell": "tdesign-miniprogram/cell/cell",
     "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
-    "t-toast": "tdesign-miniprogram/toast/toast"
+    "t-toast": "tdesign-miniprogram/toast/toast",
+    "loading-transition": "../../components/loading-transition/index"
   },
-  "navigationBarTitleText": "颜色选择"
+  "navigationBarTitleText": "心情色彩测试"
 }

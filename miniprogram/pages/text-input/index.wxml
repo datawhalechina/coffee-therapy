@@ -69,3 +69,6 @@
     </view>
   </t-button>
 </view>
+
+<!-- 过渡动画组件 -->
+<loading-transition id="loadingTransition" show="{{showLoadingTransition}}" />

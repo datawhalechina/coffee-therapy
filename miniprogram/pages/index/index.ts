@@ -4,10 +4,10 @@ import config from '../../config/env';
 
 Component({
   data: {
-    // 页面数据
-    timerInterval: null as any,
-    isLoading: false,
-    loadingText: ''
+    isLoading: false, // 加载状态
+    loadingText: '', // 加载提示文本
+    cloudEnvId: config.cloudEnv, // 云环境ID
+    showLoadingTransition: false // 控制过渡动画显示
   },
   methods: {
     // 导航到其他页面
@@ -18,26 +18,40 @@ Component({
       });
     },
     
+    // 显示过渡动画
+    showTransition() {
+      (this as any).setData({
+        showLoadingTransition: true
+      });
+    },
+    
+    // 隐藏过渡动画
+    hideTransition() {
+      (this as any).setData({
+        showLoadingTransition: false
+      });
+    },
+    
     // 直接生成疗愈卡片
     generateDirectCard() {
       const self = this as any;
-      if (self.data.isLoading) {
-        return;
-      }
+      
+      // 显示过渡动画
+      self.showTransition();
       
       self.setData({
         isLoading: true,
-        loadingText: '正在为您生成专属专属卡片...'
+        loadingText: '正在生成您的专属卡片...'
       });
       
       const cardData: any = {};
       
-      // 第一步：调用 chatgpt 云函数生成随机疗愈文字
+      // 第一步：调用 chatgpt 云函数生成随机文字
       wx.cloud.callFunction({
         name: 'chatgpt',
         data: {
           name: 'sendMessage',
-          message: '你是一位专业心灵导师，擅长用一句话触发职场人的内在共鸣。            基于用户分享的鼓励情绪，请生成一句中英文对照的“彩虹卡”式疗愈语句，要求：            1. 只输出一句完整话语，先中文后英文；            2. 不超过20字（中文）+ 20字（英文）；            3. 富有温度与安全感，无需前置主题词；    4. 留有“空白”感，让用户自行投射与解读； 5. 适合职场场景，能引发内心共鸣。',
+          message: '你是一位擅长写意境诗句的心灵导师。请创作一句30字以内的人生感悟，要求：1. 以"从今天开始"、"记住"、"愿你"等词开头 2. 表达自我认同、内在成长或生命感悟 3. 意境优美，触动人心 4. 给予职场人积极的力量 5. 只输出这一句话，不要其他内容',
           sessionId: 'direct_' + Date.now(),
           model: 'deepseek-v3',
           temperature: 0.8,
@@ -70,32 +84,33 @@ Component({
                   cardData.textColor = encodeURIComponent(colorResult.selectedColor.text);
                 }
                 
-                // 跳转到结果页并传递所有参数
-                self.navigateToCardResult(cardData);
+                // 延迟一下再跳转
+                setTimeout(() => {
+                  // 跳转到结果页并传递所有参数
+                  self.navigateToCardResult(cardData);
+                }, 800);
               },
               fail: colorErr => {
                 console.error('颜色云函数调用失败：', colorErr);
                 // 颜色生成失败，使用默认颜色跳转
-                self.navigateToCardResult(cardData);
+                setTimeout(() => {
+                  self.navigateToCardResult(cardData);
+                }, 800);
               }
             });
           } else {
             // 文本生成失败，使用默认文本跳转
             console.error('文本生成失败，使用默认文本跳转:', result);
             cardData.quote = encodeURIComponent('愿你拥有内心的平静与美好。');
-            self.navigateToCardResult(cardData);
+            setTimeout(() => {
+              self.navigateToCardResult(cardData);
+            }, 800);
           }
         },
         fail: err => {
           console.error('文本云函数调用失败：', err);
           // 云函数调用失败，使用默认文本直接跳转
           cardData.quote = encodeURIComponent('愿你拥有内心的平静与美好。');
-          
-          wx.showToast({
-            title: '正在生成卡片...',
-            icon: 'loading',
-            duration: 1000
-          });
           
           // 延迟1秒后跳转，给用户更好的体验
           setTimeout(() => {
@@ -137,20 +152,25 @@ Component({
       
       const self = this as any;
       
-      // 执行跳转
-      wx.navigateTo({
-        url: url,
-        success: () => {
-          console.log('成功跳转到卡片结果页');
-        },
-        complete: () => {
-          // 重置加载状态
-          self.setData({
-            isLoading: false,
-            loadingText: ''
-          });
-        }
-      });
+      // 等待GIF动画播放完成后再跳转
+      setTimeout(() => {
+        // 执行跳转
+        wx.navigateTo({
+          url: url,
+          success: () => {
+            console.log('成功跳转到卡片结果页');
+            // 跳转成功后隐藏过渡动画
+            self.hideTransition();
+          },
+          complete: () => {
+            // 重置加载状态
+            self.setData({
+              isLoading: false,
+              loadingText: ''
+            });
+          }
+        });
+      }, 3000); // 等待3秒GIF动画播放完成
     },
     
     // 调用云函数存储数据到数据库
@@ -191,9 +211,10 @@ Component({
         console.error('请使用 2.2.3 或以上的基础库以使用云能力');
       } else {
         wx.cloud.init({
-          env: config.cloudEnv,
+          env: self.data.cloudEnvId,
           traceUser: true,
         });
+        console.log('云环境初始化成功！');
         
         // 立即执行一次，不用等待5秒
         self.storeDataToCloud();

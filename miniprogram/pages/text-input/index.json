@@ -6,7 +6,8 @@
     "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
     "t-textarea": "tdesign-miniprogram/textarea/textarea",
     "t-tag": "tdesign-miniprogram/tag/tag",
-    "t-loading": "tdesign-miniprogram/loading/loading"
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "loading-transition": "../../components/loading-transition/index"
   },
-  "navigationBarTitleText": "文字输入"
+  "navigationBarTitleText": "今日能力抽取"
 }

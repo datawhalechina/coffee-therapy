@@ -10,7 +10,8 @@ Component({
     selectedExample: -1, // -1 表示未选择任何示例
     isLoading: false, // 加载状态
     loadingText: '', // 加载提示文本
-    cloudEnvId: config.cloudEnv // 云环境ID
+    cloudEnvId: config.cloudEnv, // 云环境ID
+    showLoadingTransition: false, // 控制过渡动画显示
   },
 
   lifetimes: {
@@ -51,10 +52,34 @@ Component({
       });
     },
 
+    // 显示过渡动画
+    showTransition() {
+      this.setData({
+        showLoadingTransition: true
+      });
+    },
+
+    // 隐藏过渡动画
+    hideTransition() {
+      this.setData({
+        showLoadingTransition: false
+      });
+    },
+
     // 生成卡片
-    generateCard: function () {
-      const text = this.data.inputText;
-      if (!text) return;
+    generateCard: function() {
+      const text = this.data.inputText.trim();
+      
+      if (!text) {
+        wx.showToast({
+          title: '请输入内容',
+          icon: 'none'
+        });
+        return;
+      }
+
+      // 显示过渡动画
+      this.showTransition();
 
       this.setData({
         isLoading: true,
@@ -70,11 +95,11 @@ Component({
         name: 'chatgpt',
         data: {
           name: 'sendMessage',
-message: `你是一位专业心灵导师，擅长用一句话触发职场人的内在共鸣。  基于用户分享的心情 ${text}，请生成一句中英文对照的“彩虹卡”式疗愈语句，要求：  
+message: `你是一位专业心灵导师，擅长用一句话触发职场人的内在共鸣。  基于用户分享的心情 ${text}，请生成一句中英文对照的"彩虹卡"式疗愈语句，要求：  
         1. 只输出一句完整话语，先中文后英文；  
         2. 不超过20字（中文）+ 20字（英文）；  
         3. 富有温度与安全感，无需前置主题词；  
-        4. 留有“空白”感，让用户自行投射与解读；  
+        4. 留有"空白"感，让用户自行投射与解读；  
         5. 适合职场场景，能引发内心共鸣。`,
           sessionId: 'text_' + Date.now(),
           model: 'deepseek-v3',
@@ -109,32 +134,33 @@ message: `你是一位专业心灵导师，擅长用一句话触发职场人的�
                   cardData.textColor = encodeURIComponent(colorResult.selectedColor.text);
                 }
 
-                // 跳转到结果页并传递所有参数
-                this.navigateToCardResult(cardData);
+                // 延迟一下再跳转
+                setTimeout(() => {
+                  // 跳转到结果页并传递所有参数
+                  this.navigateToCardResult(cardData);
+                }, 800);
               },
               fail: colorErr => {
                 console.error('颜色云函数调用失败：', colorErr);
                 // 颜色生成失败，使用默认颜色跳转
-                this.navigateToCardResult(cardData);
+                setTimeout(() => {
+                  this.navigateToCardResult(cardData);
+                }, 800);
               }
             });
           } else {
             // 文本生成失败，使用默认文本跳转
             console.error('文本生成失败，使用默认文本跳转:', result);
             cardData.quote = encodeURIComponent('愿你内心平静，拥抱美好。');
-            this.navigateToCardResult(cardData);
+            setTimeout(() => {
+              this.navigateToCardResult(cardData);
+            }, 800);
           }
         },
         fail: err => {
           console.error('文本云函数调用失败：', err);
           // 云函数调用失败，使用默认文本直接跳转
           cardData.quote = encodeURIComponent('愿你内心平静，拥抱美好。');
-
-          wx.showToast({
-            title: '正在生成卡片...',
-            icon: 'loading',
-            duration: 1000
-          });
 
           // 延迟1秒后跳转，给用户更好的体验
           setTimeout(() => {
@@ -182,20 +208,25 @@ message: `你是一位专业心灵导师，擅长用一句话触发职场人的�
 
       url += `&chatgptParams=${chatgptParams}&colorpsychologyParams=${colorpsychologyParams}`;
 
-      // 执行跳转
-      wx.navigateTo({
-        url: url,
-        success: () => {
-          console.log('成功跳转到卡片结果页');
-        },
-        complete: () => {
-          // 重置加载状态
-          this.setData({
-            isLoading: false,
-            loadingText: ''
-          });
-        }
-      });
+      // 等待GIF动画播放完成后再跳转
+      setTimeout(() => {
+        // 执行跳转
+        wx.navigateTo({
+          url: url,
+          success: () => {
+            console.log('成功跳转到卡片结果页');
+            // 跳转成功后隐藏过渡动画
+            this.hideTransition();
+          },
+          complete: () => {
+            // 重置加载状态
+            this.setData({
+              isLoading: false,
+              loadingText: ''
+            });
+          }
+        });
+      }, 3000); // 等待3秒GIF动画播放完成
     }
   }
 });

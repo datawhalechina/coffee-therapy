@@ -91,6 +91,25 @@ Page({
     
     console.log('卡片结果页接收到的参数：', options);
     
+    // 页面加载时隐藏所有可能的过渡动画
+    try {
+      // 尝试获取页面栈中的前一个页面，并隐藏其过渡动画
+      const pages = getCurrentPages();
+      if (pages.length > 1) {
+        const prevPage = pages[pages.length - 2];
+        if (prevPage && prevPage.hideTransition) {
+          prevPage.hideTransition();
+        }
+        if (prevPage && prevPage.setData) {
+          prevPage.setData({
+            showLoadingTransition: false
+          });
+        }
+      }
+    } catch (error) {
+      console.log('隐藏前页过渡动画时出错:', error);
+    }
+    
     // 保存云函数调用参数，用于"再读一则"功能
     if (options.chatgptParams) {
       this.chatgptParams = JSON.parse(decodeURIComponent(options.chatgptParams));
@@ -233,7 +252,7 @@ Page({
       // 5. 绘制引用文本
       console.log('步骤5: 绘制引用文本');
       ctx.fillStyle = cardData.textColor || '#595880';
-      ctx.font = '14px sans-serif'; // 稍微减小字体
+      ctx.font = '15px sans-serif'; // 稍微减小字体
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
       
@@ -397,10 +416,8 @@ Page({
               success: (modalRes) => {
                 if (modalRes.confirm) {
                   // 调用微信分享API
-                  wx.shareAppMessage({
-                    title: '来自宇宙漂流瓶的专属卡片',
-                    imageUrl: res.tempFilePath,
-                    query: 'from=share',
+                  wx.showShareImageMenu({
+                    path: res.tempFilePath,
                     success: (shareRes) => {
                       console.log('分享成功', shareRes);
                       Toast({
@@ -409,17 +426,6 @@ Page({
                         message: '分享成功',
                         theme: 'success',
                         duration: 1500
-                      });
-                      
-                      // 询问是否保存到相册
-                      wx.showModal({
-                        title: '保存图片',
-                        content: '是否将分享图片保存到相册？',
-                        success: (albumRes) => {
-                          if (albumRes.confirm) {
-                            this.saveImageToAlbum(res.tempFilePath);
-                          }
-                        }
                       });
                     },
                     fail: (err) => {
@@ -458,9 +464,9 @@ Page({
     }, this);
   },
 
-  // 旧版API绘制函数 - 简化版本（移除REMINDER，更改署名）
+  // 旧版API绘制函数 - 优化文本布局版本
   drawCardOldAPI: function(ctx, width, height) {
-    console.log('=== 使用旧版API绘制卡片（简化版本）===');
+    console.log('=== 使用旧版API绘制卡片（优化文本布局）===');
     
     const cardData = this.data.cardData;
     const currentDate = this.data.currentDate;
@@ -471,7 +477,7 @@ Page({
     ctx.fillRect(0, 0, width, height); // 整个画布都是卡片背景
     
     // 卡片内容区域设置
-    const contentPadding = 30; // 增加内边距
+    const contentPadding = 30; // 减少内边距，让文字距离两边更近
     const textColor = cardData.textColor || '#595880';
     
     // 1. 在卡片顶部绘制日期和标题
@@ -495,32 +501,31 @@ Page({
     ctx.setTextAlign('right');
     ctx.fillText('宇宙漂流瓶', width - contentPadding, 50);
     
-    // 2. 绘制引用文本 - 放大并居中（移除REMINDER部分）
+    // 2. 绘制引用文本 - 智能分行处理
     ctx.setFillStyle(textColor);
-    ctx.setFontSize(22); // 进一步增大字体，因为去掉了REMINDER部分，有更多空间
+    ctx.setFontSize(26); // 增大字体从22到26
     ctx.setTextAlign('center'); // 居中对齐
     
     const quote = cardData.quote || '愿你拥有内心的平静与美好。';
     
-    // 文本分行处理
-    const maxLineLength = 11; // 减少每行字符数适应更大字体
-    const lines = [];
-    for (let i = 0; i < quote.length; i += maxLineLength) {
-      lines.push(quote.substring(i, i + maxLineLength));
-    }
+    // 智能文本分行处理 - 改进版：中英文分离处理
+    const lines = this.smartTextWrap(quote, 22); // 每行最多16个字符宽度
     
-    // 计算文本区域的中心点 - 因为没有REMINDER，可以从更高位置开始
+    console.log('智能分行结果:', lines);
+    
+    // 计算文本区域的中心点
     const textAreaCenterX = width / 2; // 画布水平中心
-    const availableHeight = height - 150; // 可用高度（减去顶部日期和底部署名空间）
-    const totalTextHeight = lines.length * 35; // 每行35px高度
+    const availableHeight = height - 150; // 可用高度
+    const totalTextHeight = lines.length * 40; // 每行40px高度，增加行高
     let textStartY = 100 + (availableHeight - totalTextHeight) / 2; // 垂直居中
     
-    const lineHeight = 35; // 增加行高
-    const maxLines = 8;
+    const lineHeight = 40; // 增加行高从35到40
+    const maxLines = 10; // 增加最大行数
     
     lines.forEach((line, index) => {
       if (index < maxLines && textStartY < height - 80) {
-        ctx.fillText(line, textAreaCenterX, textStartY);
+        ctx.fillText(line.trim(), textAreaCenterX, textStartY); // 去除行首尾空格
+        console.log(`第${index + 1}行绘制:`, line.trim(), '位置:', textAreaCenterX, textStartY);
         textStartY += lineHeight;
       }
     });
@@ -533,6 +538,121 @@ Page({
     ctx.fillText('— COLORSURF', width - contentPadding, authorY);
     
     console.log('=== 旧版API卡片绘制完成 ===');
+  },
+
+  // 智能文本换行函数 - 改进版：中英文分离处理
+  smartTextWrap: function(text, maxWidth) {
+    const lines = [];
+    let currentLine = '';
+    let i = 0;
+    let lastWasChinese = false;
+    
+    console.log('开始智能分行处理，文本:', text);
+    
+    while (i < text.length) {
+      const char = text[i];
+      const isChinese = this.isChinese(char);
+      
+      // 如果从中文切换到英文，强制换行
+      if (lastWasChinese && !isChinese && char !== ' ' && char !== '，' && char !== '。' && char !== '、') {
+        if (currentLine.trim()) {
+          lines.push(currentLine.trim());
+          console.log('中英文切换，添加行:', currentLine.trim());
+          currentLine = '';
+        }
+      }
+      
+      // 检查是否是中文字符
+      if (isChinese) {
+        // 中文字符处理
+        if (this.getTextWidth(currentLine + char) <= maxWidth) {
+          currentLine += char;
+        } else {
+          if (currentLine.trim()) {
+            lines.push(currentLine.trim());
+            console.log('中文超长，添加行:', currentLine.trim());
+          }
+          currentLine = char;
+        }
+        lastWasChinese = true;
+        i++;
+      } else if (char === ' ' || char === '，' || char === '。' || char === '、') {
+        // 空格和标点符号处理
+        if (this.getTextWidth(currentLine + char) <= maxWidth) {
+          currentLine += char;
+        } else {
+          if (currentLine.trim()) {
+            lines.push(currentLine.trim());
+            console.log('标点超长，添加行:', currentLine.trim());
+          }
+          currentLine = char === ' ' ? '' : char;
+        }
+        lastWasChinese = (char !== ' ');
+        i++;
+      } else {
+        // 英文字符处理 - 按单词分割
+        let word = '';
+        let j = i;
+        
+        // 提取完整的英文单词（包括数字和常见符号）
+        while (j < text.length && !this.isChinese(text[j]) && text[j] !== ' ' && text[j] !== '，' && text[j] !== '。' && text[j] !== '、') {
+          word += text[j];
+          j++;
+        }
+        
+        console.log('提取到英文单词:', word);
+        
+        // 检查当前行能否容纳这个单词
+        const spaceNeeded = currentLine && !currentLine.endsWith(' ') ? ' ' : '';
+        const testLine = currentLine + spaceNeeded + word;
+        
+        if (this.getTextWidth(testLine) <= maxWidth && currentLine.length > 0) {
+          // 能容纳，添加到当前行
+          if (currentLine && !currentLine.endsWith(' ')) {
+            currentLine += ' ';
+          }
+          currentLine += word;
+        } else {
+          // 不能容纳或需要新行
+          if (currentLine.trim()) {
+            lines.push(currentLine.trim());
+            console.log('英文超长，添加行:', currentLine.trim());
+          }
+          currentLine = word; // 新行开始
+        }
+        
+        lastWasChinese = false;
+        i = j; // 跳过整个单词
+      }
+    }
+    
+    // 添加最后一行
+    if (currentLine.trim()) {
+      lines.push(currentLine.trim());
+      console.log('添加最后一行:', currentLine.trim());
+    }
+    
+    console.log('最终分行结果:', lines);
+    return lines;
+  },
+
+  // 判断是否为中文字符
+  isChinese: function(char) {
+    return /[\u4e00-\u9fa5]/.test(char);
+  },
+
+  // 估算文本宽度（简化版本）
+  getTextWidth: function(text) {
+    let width = 0;
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (this.isChinese(char)) {
+        width += 2; // 中文字符占2个单位宽度
+      } else {
+        width += 1; // 英文字符占1个单位宽度
+      }
+    }
+    return width;
   },
   
   handleReadAnother: function() {

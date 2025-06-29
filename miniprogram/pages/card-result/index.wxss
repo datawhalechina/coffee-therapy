@@ -27,7 +27,6 @@ page {
   padding: 15rpx 10rpx;
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 30rpx;
 }
 
 .date-section {
@@ -58,8 +57,7 @@ page {
 .card-prototype {
   background-color: #CBCBE7;
   border-radius: 40rpx;
-  padding: 80rpx 40rpx;
-  margin: 40rpx 0 60rpx 0;
+  margin: 40rpx 0 25rpx 0;
   color: #595880;
   box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.12);
   flex-grow: 1;

@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "t-icon": "/miniprogram_npm/tdesign-miniprogram/icon/icon"
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "loading-transition": "../../components/loading-transition/index"
   },
-  "navigationBarTitleText": "AI咖啡时光"
+  "navigationBarTitleText": "咖啡疗愈空间"
 }

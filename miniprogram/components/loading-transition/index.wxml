@@ -1,0 +1,11 @@
+<view class="loading-overlay" wx:if="{{show}}">
+  <view class="gif-container">
+    <image 
+      class="loading-gif"
+      src="加载动画过渡.gif"
+      mode="aspectFill"
+      bindload="onGifLoaded"
+      binderror="onGifError"
+    />
+  </view>
+</view> 

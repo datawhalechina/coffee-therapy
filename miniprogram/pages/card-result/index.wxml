@@ -16,13 +16,13 @@
       <view class="reminder-line" style="background-color: {{cardData.textColor}}"></view> <!-- Styled view to act as hr -->
       <text class="quote-prototype" style="color: {{cardData.textColor}}">{{cardData.quote}}</text>
     </view>
-    <text class="author-prototype" style="color: {{cardData.textColor}}">— 爱你的咖啡</text> <!-- Using app-specific author -->
+    <text class="author-prototype" style="color: {{cardData.textColor}}">— COLORSURF</text> <!-- Using app-specific author -->
   </view>
 
   <!-- Updated Action Buttons (Layout from prototype) -->
   <view class="buttons-container-prototype">
     <button class="button-prototype" bindtap="handleShare">分享给朋友</button>
-    <button class="button-prototype" bindtap="handleReadAnother">再读一则</button> <!-- New action -->
+    <button class="button-prototype" bindtap="handleReadAnother">再抽一张</button> <!-- New action -->
   </view>
 
   <!-- 隐藏的Canvas用于生成分享图片 - 旧版API -->

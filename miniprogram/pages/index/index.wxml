@@ -65,3 +65,6 @@
     </view>
   </view>
 </view>
+
+<!-- 加载过渡动画组件 -->
+<loading-transition id="loadingTransition" show="{{showLoadingTransition}}" />
