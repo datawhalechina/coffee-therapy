@@ -150,12 +150,388 @@ Page({
   
   handleShare: function() {
     console.log('Share button tapped');
-    Toast({
-      context: this,
-      selector: '#t-toast',
-      message: '分享功能待实现',
-      icon: 'help-circle'
+    
+    // 直接调用生成分享图片，不再使用Promise方式
+    this.generateShareImage();
+  },
+
+  // 绘制卡片内容 - 修复版本，参考测试成功的方法
+  drawCard: function(ctx, width, height) {
+    console.log('=== 开始绘制卡片（修复版本）===');
+    console.log('画布尺寸:', width, 'x', height);
+    
+    const cardData = this.data.cardData;
+    const currentDate = this.data.currentDate;
+    
+    console.log('卡片数据:', JSON.stringify(cardData));
+    console.log('日期数据:', JSON.stringify(currentDate));
+    
+    try {
+      // 重置变换矩阵，确保绘制从正确的坐标开始
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      
+      // 1. 绘制整体背景 - 使用浅灰色
+      console.log('步骤1: 绘制整体背景');
+      ctx.fillStyle = '#F5F5F5';
+      ctx.fillRect(0, 0, width, height);
+      console.log('整体背景绘制完成');
+      
+      // 2. 绘制顶部日期和标题区域
+      console.log('步骤2: 绘制顶部区域');
+      const headerHeight = 80;
+      
+      // 日期部分 - 使用绝对坐标
+      ctx.fillStyle = '#333333';
+      ctx.font = 'bold 24px sans-serif'; // 稍微减小字体
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      const dayText = currentDate.day || '27';
+      ctx.fillText(dayText, 30, 20);
+      console.log('日期绘制:', dayText, '位置: 30, 20');
+      
+      // 月年信息
+      ctx.fillStyle = '#666666';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      const monthYearText = currentDate.monthYear || 'Jun 2025';
+      ctx.fillText(monthYearText, 30, 50);
+      console.log('月年绘制:', monthYearText, '位置: 30, 50');
+      
+      // 标题
+      ctx.fillStyle = '#333333';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('宇宙漂流瓶', width / 2, 30);
+      console.log('标题绘制完成，位置:', width / 2, 30);
+      
+      // 3. 绘制卡片主体
+      console.log('步骤3: 绘制卡片主体');
+      const cardMargin = 20;
+      const cardX = cardMargin;
+      const cardY = headerHeight + 10; // 90
+      const cardWidth = width - (cardMargin * 2); // 335
+      const cardHeight = 300; // 减小高度，确保在画布内
+      
+      console.log('卡片位置:', { cardX, cardY, cardWidth, cardHeight });
+      console.log('卡片边界检查 - 右边界:', cardX + cardWidth, '下边界:', cardY + cardHeight);
+      
+      // 绘制卡片背景
+      const backgroundColor = cardData.backgroundColor || '#CBCBE7';
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(cardX, cardY, cardWidth, cardHeight);
+      console.log('卡片背景绘制完成, 颜色:', backgroundColor);
+      
+      // 4. 绘制卡片内容
+      console.log('步骤4: 绘制卡片内容');
+      const contentPadding = 20; // 减小内边距
+      const contentX = cardX + contentPadding; // 40
+      const contentY = cardY + contentPadding; // 110
+      
+      // 5. 绘制引用文本
+      console.log('步骤5: 绘制引用文本');
+      ctx.fillStyle = cardData.textColor || '#595880';
+      ctx.font = '14px sans-serif'; // 稍微减小字体
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      
+      const quote = cardData.quote || '愿你拥有内心的平静与美好。';
+      console.log('要绘制的文本:', quote);
+      
+      // 文本分行处理 - 更保守的分行
+      const maxLineLength = 16; // 减少每行字符数
+      const lines = [];
+      for (let i = 0; i < quote.length; i += maxLineLength) {
+        lines.push(quote.substring(i, i + maxLineLength));
+      }
+      
+      console.log('文本分行结果:', lines);
+      
+      let textY = contentY + 35; // 文本起始Y坐标
+      const lineHeight = 22; // 行高
+      const maxLines = 8; // 最多显示8行
+      
+      lines.forEach((line, index) => {
+        if (index < maxLines && textY < cardY + cardHeight - 40) { // 确保不超出卡片边界
+          ctx.fillText(line, contentX, textY);
+          console.log(`第${index + 1}行绘制:`, line, '位置:', contentX, textY);
+          textY += lineHeight;
+        }
+      });
+      
+      // 6. 绘制作者署名
+      console.log('步骤6: 绘制作者署名');
+      ctx.fillStyle = cardData.textColor || '#595880';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'top';
+      const authorY = cardY + cardHeight - 30; // 距离卡片底部30px
+      ctx.fillText('— 爱你的咖啡', cardX + cardWidth - contentPadding, authorY);
+      console.log('作者署名绘制完成，位置:', cardX + cardWidth - contentPadding, authorY);
+      
+      console.log('=== 卡片绘制全部完成 ===');
+      
+    } catch (error) {
+      console.error('绘制过程中发生错误:', error);
+      throw error;
+    }
+  },
+
+  // 分享给朋友
+  shareToFriend: function() {
+    console.log('=== 点击分享给朋友 ===');
+    
+    this.generateShareImage();
+  },
+
+  // 生成分享图片 - 修复版本（解决draw回调问题）
+  generateShareImage: function() {
+    console.log('=== 开始生成分享图片 ===');
+    
+    // 立即显示加载状态
+    wx.showLoading({
+      title: '生成图片中...',
+      mask: true
     });
+    
+    const canvasId = 'shareCanvas';
+    const width = 375;
+    const height = 500;
+    
+    console.log('画布配置:', { canvasId, width, height });
+    
+    // 使用旧版 Canvas API
+    const ctx = wx.createCanvasContext(canvasId, this);
+    
+    if (!ctx) {
+      console.error('无法创建Canvas上下文');
+      wx.hideLoading();
+      wx.showToast({
+        title: '生成失败',
+        icon: 'error'
+      });
+      return;
+    }
+    
+    console.log('Canvas上下文创建成功');
+    
+    // 绘制卡片
+    console.log('开始绘制卡片...');
+    this.drawCardOldAPI(ctx, width, height);
+    
+    // 提交绘制
+    console.log('提交绘制命令...');
+    
+    // 使用更可靠的方式处理draw回调
+    let drawCallbackExecuted = false;
+    
+    // 设置超时机制，如果回调没有在合理时间内执行，强制执行转换
+    const timeoutId = setTimeout(() => {
+      if (!drawCallbackExecuted) {
+        console.log('draw回调超时，强制执行图片转换...');
+        drawCallbackExecuted = true;
+        this.convertCanvasToImage(canvasId, width, height);
+      }
+    }, 2000); // 2秒超时
+    
+    // 执行draw操作
+    ctx.draw(false, () => {
+      console.log('绘制提交完成（回调执行）');
+      
+      if (!drawCallbackExecuted) {
+        drawCallbackExecuted = true;
+        clearTimeout(timeoutId);
+        
+        // 稍微延迟确保绘制完成
+        setTimeout(() => {
+          console.log('开始转换图片...');
+          this.convertCanvasToImage(canvasId, width, height);
+        }, 500);
+      }
+    });
+    
+    // 如果draw方法本身有问题，提供额外的备用机制
+    setTimeout(() => {
+      if (!drawCallbackExecuted) {
+        console.log('draw方法可能有问题，尝试备用转换方案...');
+        drawCallbackExecuted = true;
+        clearTimeout(timeoutId);
+        this.convertCanvasToImage(canvasId, width, height);
+      }
+    }, 3000); // 3秒备用超时
+  },
+  
+  // 转换画布为图片
+  convertCanvasToImage: function(canvasId, width, height) {
+    console.log('=== 开始转换画布为图片 ===');
+    console.log('转换参数:', { canvasId, width, height });
+    
+    wx.canvasToTempFilePath({
+      canvasId: canvasId,
+      width: width,
+      height: height,
+      destWidth: width * 2, // 提高分辨率
+      destHeight: height * 2,
+      fileType: 'png',
+      quality: 1.0,
+      success: (res) => {
+        console.log('图片生成成功:', res.tempFilePath);
+        
+        wx.hideLoading();
+        
+        // 先预览图片确认生成成功
+        wx.previewImage({
+          urls: [res.tempFilePath],
+          current: res.tempFilePath,
+          success: () => {
+            console.log('图片预览成功');
+            
+            // 预览成功后询问是否要分享
+            wx.showModal({
+              title: '图片生成成功',
+              content: '是否要分享这张卡片？',
+              confirmText: '分享',
+              cancelText: '取消',
+              success: (modalRes) => {
+                if (modalRes.confirm) {
+                  // 调用微信分享API
+                  wx.shareAppMessage({
+                    title: '来自宇宙漂流瓶的专属卡片',
+                    imageUrl: res.tempFilePath,
+                    query: 'from=share',
+                    success: (shareRes) => {
+                      console.log('分享成功', shareRes);
+                      Toast({
+                        context: this,
+                        selector: '#t-toast',
+                        message: '分享成功',
+                        theme: 'success',
+                        duration: 1500
+                      });
+                      
+                      // 询问是否保存到相册
+                      wx.showModal({
+                        title: '保存图片',
+                        content: '是否将分享图片保存到相册？',
+                        success: (albumRes) => {
+                          if (albumRes.confirm) {
+                            this.saveImageToAlbum(res.tempFilePath);
+                          }
+                        }
+                      });
+                    },
+                    fail: (err) => {
+                      console.error('分享失败', err);
+                      Toast({
+                        context: this,
+                        selector: '#t-toast',
+                        message: '分享失败，请重试',
+                        theme: 'error',
+                        duration: 1500
+                      });
+                    }
+                  });
+                }
+              }
+            });
+          },
+          fail: (error) => {
+            console.error('图片预览失败:', error);
+            wx.showToast({
+              title: '预览失败',
+              icon: 'error'
+            });
+          }
+        });
+      },
+      fail: (error) => {
+        console.error('图片生成失败:', error);
+        
+        wx.hideLoading();
+        wx.showToast({
+          title: '生成失败',
+          icon: 'error'
+        });
+      }
+    }, this);
+  },
+
+  // 旧版API绘制函数 - 简化版本（移除REMINDER，更改署名）
+  drawCardOldAPI: function(ctx, width, height) {
+    console.log('=== 使用旧版API绘制卡片（简化版本）===');
+    
+    const cardData = this.data.cardData;
+    const currentDate = this.data.currentDate;
+    
+    // 直接绘制卡片，不需要外部背景
+    const backgroundColor = cardData.backgroundColor || '#CBCBE7';
+    ctx.setFillStyle(backgroundColor);
+    ctx.fillRect(0, 0, width, height); // 整个画布都是卡片背景
+    
+    // 卡片内容区域设置
+    const contentPadding = 30; // 增加内边距
+    const textColor = cardData.textColor || '#595880';
+    
+    // 1. 在卡片顶部绘制日期和标题
+    // 日期部分 - 放在卡片左上角
+    ctx.setFillStyle(textColor);
+    ctx.setFontSize(24);
+    ctx.setTextAlign('left');
+    const dayText = currentDate.day || '27';
+    ctx.fillText(dayText, contentPadding, 40);
+    
+    // 月年信息
+    ctx.setFillStyle(textColor);
+    ctx.setFontSize(12);
+    ctx.setTextAlign('left');
+    const monthYearText = currentDate.monthYear || 'Jun 2025';
+    ctx.fillText(monthYearText, contentPadding, 65);
+    
+    // 标题 - 放在卡片右上角
+    ctx.setFillStyle(textColor);
+    ctx.setFontSize(16);
+    ctx.setTextAlign('right');
+    ctx.fillText('宇宙漂流瓶', width - contentPadding, 50);
+    
+    // 2. 绘制引用文本 - 放大并居中（移除REMINDER部分）
+    ctx.setFillStyle(textColor);
+    ctx.setFontSize(22); // 进一步增大字体，因为去掉了REMINDER部分，有更多空间
+    ctx.setTextAlign('center'); // 居中对齐
+    
+    const quote = cardData.quote || '愿你拥有内心的平静与美好。';
+    
+    // 文本分行处理
+    const maxLineLength = 11; // 减少每行字符数适应更大字体
+    const lines = [];
+    for (let i = 0; i < quote.length; i += maxLineLength) {
+      lines.push(quote.substring(i, i + maxLineLength));
+    }
+    
+    // 计算文本区域的中心点 - 因为没有REMINDER，可以从更高位置开始
+    const textAreaCenterX = width / 2; // 画布水平中心
+    const availableHeight = height - 150; // 可用高度（减去顶部日期和底部署名空间）
+    const totalTextHeight = lines.length * 35; // 每行35px高度
+    let textStartY = 100 + (availableHeight - totalTextHeight) / 2; // 垂直居中
+    
+    const lineHeight = 35; // 增加行高
+    const maxLines = 8;
+    
+    lines.forEach((line, index) => {
+      if (index < maxLines && textStartY < height - 80) {
+        ctx.fillText(line, textAreaCenterX, textStartY);
+        textStartY += lineHeight;
+      }
+    });
+    
+    // 3. 绘制作者署名 - 改为COLORSURF
+    ctx.setFillStyle(textColor);
+    ctx.setFontSize(14);
+    ctx.setTextAlign('right');
+    const authorY = height - 30; // 距离底部30px
+    ctx.fillText('— COLORSURF', width - contentPadding, authorY);
+    
+    console.log('=== 旧版API卡片绘制完成 ===');
   },
   
   handleReadAnother: function() {
@@ -294,5 +670,44 @@ Page({
         duration: 1000
       });
     }
-  }
+  },
+
+  // 保存图片到相册
+  saveImageToAlbum: function(tempFilePath) {
+    wx.saveImageToPhotosAlbum({
+      filePath: tempFilePath,
+      success: () => {
+        Toast({
+          context: this,
+          selector: '#t-toast',
+          message: '图片已保存到相册',
+          theme: 'success',
+          duration: 1500
+        });
+      },
+      fail: (err) => {
+        if (err.errMsg.includes('auth')) {
+          // 权限被拒绝，引导用户开启权限
+          wx.showModal({
+            title: '权限申请',
+            content: '需要您授权保存图片到相册，请在设置中开启权限',
+            confirmText: '去设置',
+            success: (res) => {
+              if (res.confirm) {
+                wx.openSetting();
+              }
+            }
+          });
+        } else {
+          Toast({
+            context: this,
+            selector: '#t-toast',
+            message: '保存失败',
+            theme: 'error',
+            duration: 1500
+          });
+        }
+      }
+    });
+  },
 });

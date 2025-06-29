@@ -25,6 +25,13 @@
     <button class="button-prototype" bindtap="handleReadAnother">再读一则</button> <!-- New action -->
   </view>
 
+  <!-- 隐藏的Canvas用于生成分享图片 - 旧版API -->
+  <canvas 
+    id="shareCanvas" 
+    canvas-id="shareCanvas" 
+    style="position: fixed; left: -9999px; top: -9999px; width: 375px; height: 500px; background: white;"
+  />
+
   <!-- Toast 提示组件 (Kept from original) -->
   <t-toast id="t-toast" />
 </view>

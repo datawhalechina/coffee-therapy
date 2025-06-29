@@ -13,6 +13,11 @@
     "navigationBarTitleText": "AI咖啡时光",
     "navigationBarBackgroundColor": "#ffffff"
   },
+  "permission": {
+    "scope.writePhotosAlbum": {
+      "desc": "需要您的授权保存图片到相册"
+    }
+  },
   "componentFramework": "glass-easel",
   "lazyCodeLoading": "requiredComponents",
   "usingComponents": {}
