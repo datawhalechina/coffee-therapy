@@ -1,6 +1,6 @@
 /**index.wxss**/
 page {
-  background-color: #FFF8EE;
+  background-color: #ffffff;
 }
 
 .page-container {

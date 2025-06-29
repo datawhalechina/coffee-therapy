@@ -99,6 +99,33 @@ page {
   z-index: 2;
 }
 
+/* 智能分行文本容器 */
+.quote-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60rpx 30rpx;
+  max-width: 100%;
+  z-index: 1;
+  position: relative;
+}
+
+/* 单行文本样式 */
+.quote-line {
+  font-size: 52rpx; /* 更大的字体 */
+  line-height: 1.3;
+  margin: 8rpx 0; /* 行间距 */
+  text-align: center;
+  word-break: break-word;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  max-width: 100%;
+  font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 .quote-prototype {
   font-size: 52rpx; /* 更大的字体 */
   line-height: 1.3;

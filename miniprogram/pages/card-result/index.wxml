@@ -14,7 +14,16 @@
     <view>
       <view class="reminder-label" style="color: {{cardData.textColor}}">REMINDER</view>
       <view class="reminder-line" style="background-color: {{cardData.textColor}}"></view> <!-- Styled view to act as hr -->
-      <text class="quote-prototype" style="color: {{cardData.textColor}}">{{cardData.quote}}</text>
+      
+      <!-- 智能分行文本显示 -->
+      <view class="quote-container" style="color: {{cardData.textColor}}">
+        <block wx:if="{{cardData.processedQuote && cardData.processedQuote.lines.length > 0}}">
+          <view wx:for="{{cardData.processedQuote.lines}}" wx:key="index" class="quote-line">
+            {{item}}
+          </view>
+        </block>
+        <text wx:else class="quote-prototype" style="color: {{cardData.textColor}}">{{cardData.quote}}</text>
+      </view>
     </view>
     <text class="author-prototype" style="color: {{cardData.textColor}}">— COLORSURF</text> <!-- Using app-specific author -->
   </view>

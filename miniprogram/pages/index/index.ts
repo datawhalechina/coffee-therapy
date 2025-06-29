@@ -9,6 +9,10 @@ Component({
     cloudEnvId: config.cloudEnv, // 云环境ID
     showLoadingTransition: false // 控制过渡动画显示
   },
+  onShow: function() {
+    // 如果需要在页面显示时再次调用，可以保留这里
+    // this.generateDirectCard();
+  },
   methods: {
     // 导航到其他页面
     navigateTo(e: any) {
@@ -35,7 +39,7 @@ Component({
     // 直接生成疗愈卡片
     generateDirectCard() {
       const self = this as any;
-      
+      console.log('开始生成疗愈卡片');
       // 显示过渡动画
       self.showTransition();
       
@@ -51,7 +55,12 @@ Component({
         name: 'chatgpt',
         data: {
           name: 'sendMessage',
-          message: '你是一位擅长写意境诗句的心灵导师。请创作一句30字以内的人生感悟，要求：1. 以"从今天开始"、"记住"、"愿你"等词开头 2. 表达自我认同、内在成长或生命感悟 3. 意境优美，触动人心 4. 给予职场人积极的力量 5. 只输出这一句话，不要其他内容',
+          message: `你是一位专业心灵导师，擅长用一句话触发职场人的内在共鸣。基于用户分享的心情：开心愉悦快乐，希望得到鼓励，请生成一句中英文对照的"彩虹卡"式疗愈语句，要求：
+1. 只输出一句完整话语，先中文后英文；
+2. 不超过20字（中文）+ 20字（英文）；
+3. 富有温度与安全感，无需前置主题词；
+4. 留有"空白"感，让用户自行投射与解读；
+5. 适合职场场景，能引发内心共鸣。`,
           sessionId: 'direct_' + Date.now(),
           model: 'deepseek-v3',
           temperature: 0.8,
@@ -138,7 +147,12 @@ Component({
       // 添加云函数调用参数，用于"再读一则"功能
       const chatgptParams = encodeURIComponent(JSON.stringify({
         name: 'sendMessage',
-        message: '你是一位擅长写意境诗句的心灵导师。请创作一句30字以内的人生感悟，要求：1. 以"从今天开始"、"记住"、"愿你"等词开头 2. 表达自我认同、内在成长或生命感悟 3. 意境优美，触动人心 4. 给予职场人积极的力量 5. 只输出这一句话，不要其他内容',
+        message: `你是一位专业心灵导师，擅长用一句话触发职场人的内在共鸣。基于用户分享的心情：开心愉悦快乐，希望得到鼓励，请生成一句中英文对照的"彩虹卡"式疗愈语句，要求：
+1. 只输出一句完整话语，先中文后英文；
+2. 不超过20字（中文）+ 20字（英文）；
+3. 富有温度与安全感，无需前置主题词；
+4. 留有"空白"感，让用户自行投射与解读；
+5. 适合职场场景，能引发内心共鸣。`,
         model: 'deepseek-v3',
         temperature: 0.8,
         max_tokens: 150
@@ -155,7 +169,7 @@ Component({
       // 等待GIF动画播放完成后再跳转
       setTimeout(() => {
         // 执行跳转
-        wx.navigateTo({
+        wx.redirectTo({
           url: url,
           success: () => {
             console.log('成功跳转到卡片结果页');
@@ -218,6 +232,9 @@ Component({
         
         // 立即执行一次，不用等待5秒
         self.storeDataToCloud();
+        
+        // 在页面加载时调用 generateDirectCard 函数
+        self.generateDirectCard();
       }
     },
     
@@ -230,4 +247,4 @@ Component({
       }
     }
   }
-})
+});

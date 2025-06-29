@@ -9,5 +9,5 @@
     "t-loading": "tdesign-miniprogram/loading/loading",
     "loading-transition": "../../components/loading-transition/index"
   },
-  "navigationBarTitleText": "今日能力抽取"
+  "navigationBarTitleText": "咖啡能量空间"
 }

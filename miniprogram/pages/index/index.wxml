@@ -1,44 +1,11 @@
 <!--index.wxml - 选择捕捉方式-->
 <view class="page-container">
   <!-- 欢迎横幅 -->
-  <view class="welcome-banner">
-    <view class="welcome-title">欢迎来到咖啡空间</view>
-    <view class="welcome-subtitle">让我们一起开启内心的平静之旅</view>
-  </view>
+
   
   <!-- 方法选择 -->
   <view class="method-cards">
-    <!-- 文字输入方式 -->
-    <view
-      class="method-card"
-      data-url="/pages/text-input/index"
-      bindtap="navigateTo"
-    >
-      <view class="method-card-inner">
-        <t-icon name="edit" class="feature-icon" />
-        <view class="method-title">文字输入</view>
-        <view class="method-desc">通过输入您的想法或感受，让AI捕捉您的情绪</view>
-        <view class="method-tip">
-          <t-icon name="tips" class="tip-icon" /> 适合想要表达具体想法的您
-        </view>
-      </view>
-    </view>
 
-    <!-- 颜色选择方式 -->
-    <view
-      class="method-card"
-      data-url="/pages/color-select/index"
-      bindtap="navigateTo"
-    >
-      <view class="method-card-inner">
-        <t-icon name="palette" class="feature-icon" />
-        <view class="method-title">颜色选择</view>
-        <view class="method-desc">选择一种能代表您当前心情的颜色</view>
-        <view class="method-tip">
-          <t-icon name="tips" class="tip-icon" /> 适合通过色彩表达情绪的您
-        </view>
-      </view>
-    </view>
 
 
 
