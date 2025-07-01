@@ -14,6 +14,29 @@ Component({
     // this.generateDirectCard();
   },
   methods: {
+    // 本地随机颜色生成函数
+    generateRandomColor() {
+      const colorPairs = [
+        { background: 'rgba(203, 203, 231, 1)', text: 'rgba(89, 88, 128, 1)' },
+        { background: 'rgba(172, 189, 111, 1)', text: 'rgba(253, 242, 218, 1)' },
+        { background: 'rgba(252, 226, 169, 1)', text: 'rgba(241, 111, 51, 1)' },
+        { background: 'rgba(252, 226, 169, 1)', text: 'rgba(241, 111, 51, 1)' },
+        { background: 'rgba(203, 203, 231, 1)', text: 'rgba(89, 88, 128, 1)' },
+        { background: 'rgba(201, 228, 255, 1)', text: 'rgba(50, 79, 109, 1)' },
+        { background: 'rgba(148, 173, 255, 1)', text: 'rgba(233, 242, 255, 1)' },
+        { background: 'rgba(253, 207, 191, 1)', text: 'rgba(84, 104, 182, 1)' },
+        { background: 'rgba(231, 119, 147, 1)', text: 'rgba(253, 242, 218, 1)' },
+        { background: 'rgba(178, 131, 66, 1)', text: 'rgba(255, 241, 209, 1)' },
+        { background: 'rgba(200, 217, 128, 1)', text: 'rgba(114, 129, 54, 1)' },
+        { background: 'rgba(255, 188, 249, 1)', text: 'rgba(171, 95, 174, 1)' },
+        { background: 'rgba(244, 205, 176, 1)', text: 'rgba(208, 113, 97, 1)' },
+        { background: 'rgba(38, 93, 113, 1)', text: 'rgba(205, 237, 246, 1)' }
+      ];
+      
+      const randomIndex = Math.floor(Math.random() * colorPairs.length);
+      return colorPairs[randomIndex];
+    },
+
     // 导航到其他页面
     navigateTo(e: any) {
       const url = e.currentTarget.dataset.url;
@@ -55,12 +78,15 @@ Component({
         name: 'chatgpt',
         data: {
           name: 'sendMessage',
-          message: `你是一位专业心灵导师，擅长用一句话触发职场人的内在共鸣。基于用户分享的心情：开心愉悦快乐，希望得到鼓励，请生成一句中英文对照的"彩虹卡"式疗愈语句，要求：
-1. 只输出一句完整话语，先中文后英文；
-2. 不超过20字（中文）+ 20字（英文）；
-3. 富有温度与安全感，无需前置主题词；
-4. 留有"空白"感，让用户自行投射与解读；
-5. 适合职场场景，能引发内心共鸣。`,
+          message: `请生成一句"今日心理能量提示语"。
+要求如下：
+- 不使用自然意象（如光、水、风、树、花、星星等）；
+- 内容围绕"平静、接纳、觉察、放下、信任、成长、连接"等心理主题；
+- 语言风格简洁、诗意、哲理、留白，有温柔引导感，避免命令句；
+- 一次只输出一句完整句子；
+- 格式为：中文在前，英文在后；
+- 中文不超过20个字，英文不超过20个单词；
+- 不要添加引号、标点或其他说明性文字；`,
           sessionId: 'direct_' + Date.now(),
           model: 'deepseek-v3',
           temperature: 0.8,
@@ -76,41 +102,29 @@ Component({
             const aiReply = result.reply;
             cardData.quote = encodeURIComponent(aiReply);
             
-            // 第二步：调用 colorpsychology 云函数生成随机颜色
-            wx.cloud.callFunction({
-              name: 'colorpsychology',
-              data: {
-                text: '生成温暖疗愈的随机颜色'
-              },
-              success: colorRes => {
-                console.log('随机颜色生成成功：', colorRes);
-                
-                const colorResult = colorRes.result as any;
-                
-                if (colorResult && colorResult.success && colorResult.selectedColor) {
-                  // 获取颜色编码 - 使用 selectedColor 对象
-                  cardData.backgroundColor = encodeURIComponent(colorResult.selectedColor.background);
-                  cardData.textColor = encodeURIComponent(colorResult.selectedColor.text);
-                }
-                
-                // 延迟一下再跳转
-                setTimeout(() => {
-                  // 跳转到结果页并传递所有参数
-                  self.navigateToCardResult(cardData);
-                }, 800);
-              },
-              fail: colorErr => {
-                console.error('颜色云函数调用失败：', colorErr);
-                // 颜色生成失败，使用默认颜色跳转
-                setTimeout(() => {
-                  self.navigateToCardResult(cardData);
-                }, 800);
-              }
-            });
+            // 第二步：使用本地随机颜色生成函数
+            const selectedColor = self.generateRandomColor();
+            console.log('随机颜色生成成功：', selectedColor);
+            
+            // 获取颜色编码
+            cardData.backgroundColor = encodeURIComponent(selectedColor.background);
+            cardData.textColor = encodeURIComponent(selectedColor.text);
+            
+            // 延迟一下再跳转
+            setTimeout(() => {
+              // 跳转到结果页并传递所有参数
+              self.navigateToCardResult(cardData);
+            }, 800);
           } else {
-            // 文本生成失败，使用默认文本跳转
+            // 文本生成失败，使用默认文本和随机颜色跳转
             console.error('文本生成失败，使用默认文本跳转:', result);
             cardData.quote = encodeURIComponent('愿你拥有内心的平静与美好。');
+            
+            // 使用本地随机颜色生成函数
+            const selectedColor = self.generateRandomColor();
+            cardData.backgroundColor = encodeURIComponent(selectedColor.background);
+            cardData.textColor = encodeURIComponent(selectedColor.text);
+            
             setTimeout(() => {
               self.navigateToCardResult(cardData);
             }, 800);
@@ -118,8 +132,13 @@ Component({
         },
         fail: err => {
           console.error('文本云函数调用失败：', err);
-          // 云函数调用失败，使用默认文本直接跳转
+          // 云函数调用失败，使用默认文本和随机颜色直接跳转
           cardData.quote = encodeURIComponent('愿你拥有内心的平静与美好。');
+          
+          // 使用本地随机颜色生成函数
+          const selectedColor = self.generateRandomColor();
+          cardData.backgroundColor = encodeURIComponent(selectedColor.background);
+          cardData.textColor = encodeURIComponent(selectedColor.text);
           
           // 延迟1秒后跳转，给用户更好的体验
           setTimeout(() => {
@@ -147,19 +166,24 @@ Component({
       // 添加云函数调用参数，用于"再读一则"功能
       const chatgptParams = encodeURIComponent(JSON.stringify({
         name: 'sendMessage',
-        message: `你是一位专业心灵导师，擅长用一句话触发职场人的内在共鸣。基于用户分享的心情：开心愉悦快乐，希望得到鼓励，请生成一句中英文对照的"彩虹卡"式疗愈语句，要求：
-1. 只输出一句完整话语，先中文后英文；
-2. 不超过20字（中文）+ 20字（英文）；
-3. 富有温度与安全感，无需前置主题词；
-4. 留有"空白"感，让用户自行投射与解读；
-5. 适合职场场景，能引发内心共鸣。`,
+        message: `请生成一句"今日心理能量提示语"。
+要求如下：
+- 不使用自然意象（如光、水、风、树、花、星星等）；
+- 内容围绕"平静、接纳、觉察、放下、信任、成长、连接"等心理主题；
+- 语言风格简洁、诗意、哲理、留白，有温柔引导感，避免命令句；
+- 一次只输出一句完整句子；
+- 格式为：中文在前，英文在后；
+- 中文不超过20个字，英文不超过20个单词；
+- 不要添加引号、标点或其他说明性文字；`,
+        sessionId: 'direct_' + Date.now(),
         model: 'deepseek-v3',
         temperature: 0.8,
         max_tokens: 150
       }));
       
+      // 使用本地随机颜色生成，不再需要colorpsychology参数
       const colorpsychologyParams = encodeURIComponent(JSON.stringify({
-        text: '生成温暖疗愈的随机颜色'
+        useLocalRandomColor: true
       }));
       
       url += `&chatgptParams=${chatgptParams}&colorpsychologyParams=${colorpsychologyParams}`;

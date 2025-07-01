@@ -492,28 +492,38 @@ Page({
     ctx.setTextAlign('right');
     ctx.fillText('宇宙漂流瓶', width - contentPadding, 50);
 
-    // 2. 绘制引用文本 - 智能分行处理
+    // 2. 绘制引用文本 - 使用统一的智能分行处理
     ctx.setFillStyle(textColor);
     ctx.setFontSize(26); // 增大字体从22到26
     ctx.setTextAlign('center'); // 居中对齐
 
     const quote = cardData.quote || '愿你拥有内心的平静与美好。';
 
-    // 智能文本分行处理 - 改进版：强制中英文分行
-    const lines = this.smartTextWrap(quote, 24); // 每行最多16个字符宽度
+    // 优先使用已处理的分行文本，否则重新处理
+    let textLines = [];
+    if (cardData.processedQuote && cardData.processedQuote.lines) {
+      // 使用已经处理好的分行文本
+      textLines = cardData.processedQuote.lines;
+      console.log('使用预处理分行文本:', textLines);
+    } else {
+      // 实时处理文本分行
+      const processedText = this.processTextForDisplay(quote);
+      textLines = processedText.lines || [];
+      console.log('实时处理分行文本:', textLines);
+    }
 
-    console.log('智能分行结果:', lines);
+    console.log('最终用于绘制的分行文本:', textLines);
 
     // 计算文本区域的中心点
     const textAreaCenterX = width / 2; // 画布水平中心
     const availableHeight = height - 150; // 可用高度
-    const totalTextHeight = lines.length * 40; // 每行40px高度，增加行高
+    const totalTextHeight = textLines.length * 40; // 每行40px高度，增加行高
     let textStartY = 100 + (availableHeight - totalTextHeight) / 2; // 垂直居中
 
     const lineHeight = 40; // 增加行高从35到40
     const maxLines = 10; // 增加最大行数
 
-    lines.forEach((line, index) => {
+    textLines.forEach((line, index) => {
       if (index < maxLines && textStartY < height - 80) {
         ctx.fillText(line.trim(), textAreaCenterX, textStartY); // 去除行首尾空格
         console.log(`第${index + 1}行绘制:`, line.trim(), '位置:', textAreaCenterX, textStartY);
@@ -530,168 +540,30 @@ Page({
 
     console.log('=== 旧版API卡片绘制完成 ===');
   },
-  smartTextWrap: function (text, maxWidth) {
-    console.log('开始智能分行处理，文本:', text);
 
-    // 第一步：将文本按中英文分割成段落
-    const segments = this.splitTextByLanguage(text);
-    console.log('分割后的段落:', segments);
-
-    const lines = [];
-
-    // 第二步：对每个段落进行换行处理
-    segments.forEach(segment => {
-      if (segment.trim()) {
-        const segmentLines = this.wrapSegment(segment.trim(), maxWidth);
-        lines.push(...segmentLines);
-      }
-    });
-
-    console.log('最终分行结果:', lines);
-    return lines;
+  // 本地随机颜色生成函数
+  generateRandomColor: function() {
+    const colorPairs = [
+      { background: 'rgba(203, 203, 231, 1)', text: 'rgba(89, 88, 128, 1)' },
+      { background: 'rgba(172, 189, 111, 1)', text: 'rgba(253, 242, 218, 1)' },
+      { background: 'rgba(252, 226, 169, 1)', text: 'rgba(241, 111, 51, 1)' },
+      { background: 'rgba(252, 226, 169, 1)', text: 'rgba(241, 111, 51, 1)' },
+      { background: 'rgba(203, 203, 231, 1)', text: 'rgba(89, 88, 128, 1)' },
+      { background: 'rgba(201, 228, 255, 1)', text: 'rgba(50, 79, 109, 1)' },
+      { background: 'rgba(148, 173, 255, 1)', text: 'rgba(233, 242, 255, 1)' },
+      { background: 'rgba(253, 207, 191, 1)', text: 'rgba(84, 104, 182, 1)' },
+      { background: 'rgba(231, 119, 147, 1)', text: 'rgba(253, 242, 218, 1)' },
+      { background: 'rgba(178, 131, 66, 1)', text: 'rgba(255, 241, 209, 1)' },
+      { background: 'rgba(200, 217, 128, 1)', text: 'rgba(114, 129, 54, 1)' },
+      { background: 'rgba(255, 188, 249, 1)', text: 'rgba(171, 95, 174, 1)' },
+      { background: 'rgba(244, 205, 176, 1)', text: 'rgba(208, 113, 97, 1)' },
+      { background: 'rgba(38, 93, 113, 1)', text: 'rgba(205, 237, 246, 1)' }
+    ];
+    
+    const randomIndex = Math.floor(Math.random() * colorPairs.length);
+    return colorPairs[randomIndex];
   },
 
-  // 按语言类型分割文本
-  splitTextByLanguage: function (text) {
-    const segments = [];
-    let currentSegment = '';
-    let lastType = null; // 'chinese' | 'english' | null
-
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i];
-
-      // 判断字符类型
-      const isChinese = this.isChinese(char);
-      const isSpace = char === ' ';
-      const isPunctuation = /[，。、！？；：""''（）【】]/.test(char);
-
-      let currentType = null;
-      if (isChinese || isPunctuation) {
-        currentType = 'chinese';
-      } else if (/[a-zA-Z0-9]/.test(char)) {
-        currentType = 'english';
-      } else if (isSpace) {
-        // 空格跟随前一个字符的类型
-        currentType = lastType;
-      }
-
-      // 如果语言类型发生变化（且不是空格），结束当前段落
-      if (lastType && currentType && lastType !== currentType && !isSpace) {
-        if (currentSegment.trim()) {
-          segments.push(currentSegment.trim());
-          console.log('添加段落:', currentSegment.trim(), '类型:', lastType);
-        }
-        currentSegment = char;
-        lastType = currentType;
-      } else {
-        currentSegment += char;
-        if (currentType) {
-          lastType = currentType;
-        }
-      }
-    }
-
-    // 添加最后一个段落
-    if (currentSegment.trim()) {
-      segments.push(currentSegment.trim());
-      console.log('添加最后段落:', currentSegment.trim(), '类型:', lastType);
-    }
-
-    return segments;
-  },
-
-  // 对单个段落进行换行处理
-  wrapSegment: function (segment, maxWidth) {
-    const lines = [];
-    let currentLine = '';
-
-    console.log('处理段落:', segment);
-
-    const isChinese = this.isChinese(segment[0]);
-
-    if (isChinese) {
-      // 中文段落处理：逐字符处理
-      for (let i = 0; i < segment.length; i++) {
-        const char = segment[i];
-
-        if (this.getTextWidth(currentLine + char) <= maxWidth) {
-          currentLine += char;
-        } else {
-          if (currentLine.trim()) {
-            lines.push(currentLine.trim());
-            console.log('中文行:', currentLine.trim());
-          }
-          currentLine = char;
-        }
-      }
-    } else {
-      // 英文段落处理：按单词处理
-      const words = segment.split(/\s+/).filter(word => word.trim());
-
-      for (const word of words) {
-        const spaceNeeded = currentLine.trim() ? ' ' : '';
-        const testLine = currentLine + spaceNeeded + word;
-
-        if (this.getTextWidth(testLine) <= maxWidth && currentLine.trim()) {
-          currentLine += spaceNeeded + word;
-        } else {
-          if (currentLine.trim()) {
-            lines.push(currentLine.trim());
-            console.log('英文行:', currentLine.trim());
-          }
-          currentLine = word;
-        }
-      }
-    }
-
-    // 添加当前段落的最后一行
-    if (currentLine.trim()) {
-      lines.push(currentLine.trim());
-      console.log('段落最后行:', currentLine.trim());
-    }
-
-    return lines;
-  },
-
-  // 检查是否需要因语言类型变化而换行
-  hasLanguageChange: function (currentLine, nextChar) {
-    if (!currentLine.trim()) return false;
-
-    const lastChar = currentLine.trim().slice(-1);
-    const lastIsChinese = this.isChinese(lastChar);
-    const nextIsChinese = this.isChinese(nextChar);
-
-    // 如果从中文切换到英文字母（非空格、标点），强制换行
-    if (lastIsChinese && !nextIsChinese && /[a-zA-Z]/.test(nextChar)) {
-      return true;
-    }
-
-    // 如果从英文切换到中文，强制换行
-    if (!lastIsChinese && nextIsChinese) {
-      return true;
-    }
-
-    return false;
-  },
-
-  // 判断是否为中文字符
-  isChinese: function (char) {
-    return /[\u4e00-\u9fa5]/.test(char);
-  },
-
-  // 估算文本宽度（简化版本）
-  getTextWidth: function (text) {
-    let width = 0;
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i];
-      if (this.isChinese(char)) {
-        width += 2; // 中文字符占2个单位宽度
-      } else {
-        width += 1; // 英文字符占1个单位宽度
-      }
-    }
-    return width;
-  },
   handleReadAnother: function () {
     console.log('Read Another button tapped');
 
@@ -720,100 +592,195 @@ Page({
             newQuote = result.reply;
           }
 
-          // 第二步：调用colorpsychology云函数生成新颜色
-          wx.cloud.callFunction({
-            name: 'colorpsychology',
-            data: this.colorpsychologyParams,
-            success: colorRes => {
-              console.log('再读一则-颜色生成成功：', colorRes);
+          // 第二步：检查是否使用本地颜色生成
+          if (this.colorpsychologyParams.useLocalRandomColor) {
+            // 使用本地随机颜色生成
+            const selectedColor = this.generateRandomColor();
+            console.log('再读一则-使用本地默认颜色：', selectedColor);
 
-              let newBackgroundColor = this.data.cardData.backgroundColor;
-              let newTextColor = this.data.cardData.textColor;
+            // 更新卡片数据
+            this.setData({
+              'cardData.quote': newQuote,
+              'cardData.backgroundColor': selectedColor.background,
+              'cardData.textColor': selectedColor.text
+            });
 
-              const colorResult = colorRes.result;
-              if (colorResult && colorResult.success && colorResult.selectedColor) {
-                newBackgroundColor = colorResult.selectedColor.background;
-                newTextColor = colorResult.selectedColor.text;
+            // 处理新文本的分行显示
+            const processedText = this.processTextForDisplay(newQuote);
+            this.setData({
+              'cardData.processedQuote': processedText
+            });
+
+            wx.hideLoading();
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: '已更新专属内容',
+              theme: 'success',
+              duration: 1000
+            });
+          } else {
+            // 使用云函数生成颜色
+            wx.cloud.callFunction({
+              name: 'colorpsychology',
+              data: this.colorpsychologyParams,
+              success: colorRes => {
+                console.log('再读一则-颜色生成成功：', colorRes);
+
+                let newBackgroundColor = this.data.cardData.backgroundColor;
+                let newTextColor = this.data.cardData.textColor;
+
+                const colorResult = colorRes.result;
+                if (colorResult && colorResult.success && colorResult.selectedColor) {
+                  newBackgroundColor = colorResult.selectedColor.background;
+                  newTextColor = colorResult.selectedColor.text;
+                }
+
+                // 更新卡片数据
+                this.setData({
+                  'cardData.quote': newQuote,
+                  'cardData.backgroundColor': newBackgroundColor,
+                  'cardData.textColor': newTextColor
+                });
+
+                // 处理新文本的分行显示
+                const processedText = this.processTextForDisplay(newQuote);
+                this.setData({
+                  'cardData.processedQuote': processedText
+                });
+
+                wx.hideLoading();
+                Toast({
+                  context: this,
+                  selector: '#t-toast',
+                  message: '已更新专属内容',
+                  theme: 'success',
+                  duration: 1000
+                });
+              },
+              fail: colorErr => {
+                console.error('再读一则-颜色生成失败：', colorErr);
+                
+                // 只更新文字，保持原有颜色
+                this.setData({
+                  'cardData.quote': newQuote
+                });
+
+                // 处理新文本的分行显示
+                const processedText = this.processTextForDisplay(newQuote);
+                this.setData({
+                  'cardData.processedQuote': processedText
+                });
+
+                wx.hideLoading();
+                Toast({
+                  context: this,
+                  selector: '#t-toast',
+                  message: '已更新专属内容',
+                  theme: 'success',
+                  duration: 1000
+                });
               }
-
-              // 更新卡片数据
-              this.setData({
-                'cardData.quote': newQuote,
-                'cardData.backgroundColor': newBackgroundColor,
-                'cardData.textColor': newTextColor
-              });
-
-              // 处理新文本的分行显示
-              const processedText = this.processTextForDisplay(newQuote);
-              this.setData({
-                'cardData.processedQuote': processedText
-              });
-
-              wx.hideLoading();
-              Toast({
-                context: this,
-                selector: '#t-toast',
-                message: '已更新专属内容',
-                theme: 'success',
-                duration: 1000
-              });
-            },
-            fail: colorErr => {
-              console.error('再读一则-颜色生成失败：', colorErr);
-              // 只更新文字，保持原有颜色
-              this.setData({
-                'cardData.quote': newQuote
-              });
-
-              // 处理新文本的分行显示
-              const processedText = this.processTextForDisplay(newQuote);
-              this.setData({
-                'cardData.processedQuote': processedText
-              });
-
-              wx.hideLoading();
-              Toast({
-                context: this,
-                selector: '#t-toast',
-                message: '已更新专属内容',
-                theme: 'success',
-                duration: 1000
-              });
-            }
-          });
+            });
+          }
         },
         fail: err => {
           console.error('再读一则-文本生成失败：', err);
+          
+          // 使用默认文字
+          const defaultQuote = '愿你拥有内心的平静与美好。';
+          
+          // 检查是否使用本地颜色生成
+          if (this.colorpsychologyParams.useLocalRandomColor) {
+            // 使用本地随机颜色生成
+            const selectedColor = this.generateRandomColor();
+            console.log('再读一则-使用本地默认颜色：', selectedColor);
 
-          // 文本生成失败，使用随机默认文字
-          const defaultQuotes = [
-            "生活就像一杯咖啡，苦涩中带着香醇。",
-            "每一次日出都是一个新的开始，充满希望。",
-            "保持微笑，世界也会对你微笑。",
-            "勇敢地追求自己的梦想，不要害怕失败。",
-            "愿你拥有内心的平静与美好。"
-          ];
+            // 更新卡片数据
+            this.setData({
+              'cardData.quote': defaultQuote,
+              'cardData.backgroundColor': selectedColor.background,
+              'cardData.textColor': selectedColor.text
+            });
 
-          const randomIndex = Math.floor(Math.random() * defaultQuotes.length);
+            // 处理新文本的分行显示
+            const processedText = this.processTextForDisplay(defaultQuote);
+            this.setData({
+              'cardData.processedQuote': processedText
+            });
 
-          this.setData({
-            'cardData.quote': defaultQuotes[randomIndex]
-          });
+            wx.hideLoading();
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: '已更新专属内容',
+              theme: 'success',
+              duration: 1000
+            });
+          } else {
+            // 使用云函数生成颜色
+            wx.cloud.callFunction({
+              name: 'colorpsychology',
+              data: this.colorpsychologyParams,
+              success: colorRes => {
+                console.log('再读一则-默认颜色生成成功：', colorRes);
 
-          // 处理新文本的分行显示
-          const processedText = this.processTextForDisplay(defaultQuotes[randomIndex]);
-          this.setData({
-            'cardData.processedQuote': processedText
-          });
+                let newBackgroundColor = this.data.cardData.backgroundColor;
+                let newTextColor = this.data.cardData.textColor;
 
-          wx.hideLoading();
-          Toast({
-            context: this,
-            selector: '#t-toast',
-            message: '已更新专属内容',
-            theme: 'success',
-            duration: 1000
-          });
+                const colorResult = colorRes.result;
+                if (colorResult && colorResult.success && colorResult.selectedColor) {
+                  newBackgroundColor = colorResult.selectedColor.background;
+                  newTextColor = colorResult.selectedColor.text;
+                }
+
+                // 更新卡片数据
+                this.setData({
+                  'cardData.quote': defaultQuote,
+                  'cardData.backgroundColor': newBackgroundColor,
+                  'cardData.textColor': newTextColor
+                });
+
+                // 处理新文本的分行显示
+                const processedText = this.processTextForDisplay(defaultQuote);
+                this.setData({
+                  'cardData.processedQuote': processedText
+                });
+
+                wx.hideLoading();
+                Toast({
+                  context: this,
+                  selector: '#t-toast',
+                  message: '已更新专属内容',
+                  theme: 'success',
+                  duration: 1000
+                });
+              },
+              fail: colorErr => {
+                console.error('再读一则-默认颜色生成失败：', colorErr);
+                
+                // 只更新文字，保持原有颜色
+                this.setData({
+                  'cardData.quote': defaultQuote
+                });
+
+                // 处理新文本的分行显示
+                const processedText = this.processTextForDisplay(defaultQuote);
+                this.setData({
+                  'cardData.processedQuote': processedText
+                });
+
+                wx.hideLoading();
+                Toast({
+                  context: this,
+                  selector: '#t-toast',
+                  message: '已更新专属内容',
+                  theme: 'success',
+                  duration: 1000
+                });
+              }
+            });
+          }
         }
       });
     } else {
@@ -893,11 +860,14 @@ Page({
     });
   },
 
-  // 处理文本显示格式 - 智能中英文换行
+  // 处理文本显示格式 - 智能中英文换行（带行长度限制）
   processTextForDisplay: function(text) {
     if (!text) return { lines: [] };
 
     console.log('开始处理文本:', text);
+
+    // 设置每行最大字符数（中文字符按2个单位计算）
+    const maxLineWidth = 16; // 每行最多16个字符宽度单位
 
     // 智能分割中英文文本
     const segments = this.splitTextByLanguage(text);
@@ -918,13 +888,42 @@ Page({
         if (currentLine.trim()) {
           lines.push(currentLine.trim());
         }
-        currentLine = trimmedSegment;
+        currentLine = '';
+      }
+
+      // 将当前段落按字符/单词分割处理
+      if (isEnglishStart) {
+        // 英文段落按单词处理
+        const words = trimmedSegment.split(/\s+/);
+        for (const word of words) {
+          const spaceNeeded = currentLine.trim() ? ' ' : '';
+          const testLine = currentLine + spaceNeeded + word;
+          
+          if (this.calculateTextWidth(testLine) <= maxLineWidth) {
+            currentLine += spaceNeeded + word;
+          } else {
+            // 超过行宽，另起一行
+            if (currentLine.trim()) {
+              lines.push(currentLine.trim());
+            }
+            currentLine = word;
+          }
+        }
       } else {
-        // 否则追加到当前行
-        if (currentLine) {
-          currentLine += ' ' + trimmedSegment;
-        } else {
-          currentLine = trimmedSegment;
+        // 中文段落按字符处理
+        for (let i = 0; i < trimmedSegment.length; i++) {
+          const char = trimmedSegment[i];
+          const testLine = currentLine + char;
+          
+          if (this.calculateTextWidth(testLine) <= maxLineWidth) {
+            currentLine += char;
+          } else {
+            // 超过行宽，另起一行
+            if (currentLine.trim()) {
+              lines.push(currentLine.trim());
+            }
+            currentLine = char;
+          }
         }
       }
     });
@@ -939,6 +938,20 @@ Page({
     return {
       lines: lines
     };
+  },
+
+  // 计算文本宽度（中文字符占2个单位，英文字符占1个单位）
+  calculateTextWidth: function(text) {
+    let width = 0;
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (/[\u4e00-\u9fa5]/.test(char)) {
+        width += 2; // 中文字符占2个单位宽度
+      } else {
+        width += 1; // 英文字符、数字、符号占1个单位宽度
+      }
+    }
+    return width;
   },
 
   // 按语言类型分割文本 - 改进版

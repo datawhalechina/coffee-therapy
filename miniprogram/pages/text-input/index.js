@@ -31,6 +31,29 @@ Component({
   },
 
   methods: {
+    // 本地随机颜色生成函数
+    generateRandomColor: function() {
+      const colorPairs = [
+        { background: 'rgba(203, 203, 231, 1)', text: 'rgba(89, 88, 128, 1)' },
+        { background: 'rgba(172, 189, 111, 1)', text: 'rgba(253, 242, 218, 1)' },
+        { background: 'rgba(252, 226, 169, 1)', text: 'rgba(241, 111, 51, 1)' },
+        { background: 'rgba(252, 226, 169, 1)', text: 'rgba(241, 111, 51, 1)' },
+        { background: 'rgba(203, 203, 231, 1)', text: 'rgba(89, 88, 128, 1)' },
+        { background: 'rgba(201, 228, 255, 1)', text: 'rgba(50, 79, 109, 1)' },
+        { background: 'rgba(148, 173, 255, 1)', text: 'rgba(233, 242, 255, 1)' },
+        { background: 'rgba(253, 207, 191, 1)', text: 'rgba(84, 104, 182, 1)' },
+        { background: 'rgba(231, 119, 147, 1)', text: 'rgba(253, 242, 218, 1)' },
+        { background: 'rgba(178, 131, 66, 1)', text: 'rgba(255, 241, 209, 1)' },
+        { background: 'rgba(200, 217, 128, 1)', text: 'rgba(114, 129, 54, 1)' },
+        { background: 'rgba(255, 188, 249, 1)', text: 'rgba(171, 95, 174, 1)' },
+        { background: 'rgba(244, 205, 176, 1)', text: 'rgba(208, 113, 97, 1)' },
+        { background: 'rgba(38, 93, 113, 1)', text: 'rgba(205, 237, 246, 1)' }
+      ];
+      
+      const randomIndex = Math.floor(Math.random() * colorPairs.length);
+      return colorPairs[randomIndex];
+    },
+
     // 文本输入变化事件
     onTextChange: function (e) {
       const text = e.detail.value || '';
@@ -116,42 +139,29 @@ Component({
             const aiReply = result.reply;
             cardData.quote = encodeURIComponent(aiReply);
 
-            // 第二步：调用 colorpsychology 云函数生成颜色
-            wx.cloud.callFunction({
-              name: 'colorpsychology',
-              data: {
-                name: 'analyzeColor',
-                text: text
-              },
-              success: colorRes => {
-                console.log('颜色生成成功：', colorRes);
+            // 第二步：使用本地随机颜色生成函数
+            const selectedColor = this.generateRandomColor();
+            console.log('随机颜色生成成功：', selectedColor);
+            
+            // 获取颜色编码
+            cardData.backgroundColor = encodeURIComponent(selectedColor.background);
+            cardData.textColor = encodeURIComponent(selectedColor.text);
 
-                const colorResult = colorRes.result;
-
-                if (colorResult && colorResult.success && colorResult.selectedColor) {
-                  // 获取颜色编码 - 使用 selectedColor 对象
-                  cardData.backgroundColor = encodeURIComponent(colorResult.selectedColor.background);
-                  cardData.textColor = encodeURIComponent(colorResult.selectedColor.text);
-                }
-
-                // 延迟一下再跳转
-                setTimeout(() => {
-                  // 跳转到结果页并传递所有参数
-                  this.navigateToCardResult(cardData);
-                }, 800);
-              },
-              fail: colorErr => {
-                console.error('颜色云函数调用失败：', colorErr);
-                // 颜色生成失败，使用默认颜色跳转
-                setTimeout(() => {
-                  this.navigateToCardResult(cardData);
-                }, 800);
-              }
-            });
+            // 延迟一下再跳转
+            setTimeout(() => {
+              // 跳转到结果页并传递所有参数
+              this.navigateToCardResult(cardData);
+            }, 800);
           } else {
-            // 文本生成失败，使用默认文本跳转
+            // 文本生成失败，使用默认文本和随机颜色跳转
             console.error('文本生成失败，使用默认文本跳转:', result);
             cardData.quote = encodeURIComponent('愿你内心平静，拥抱美好。');
+            
+            // 使用本地随机颜色生成函数
+            const selectedColor = this.generateRandomColor();
+            cardData.backgroundColor = encodeURIComponent(selectedColor.background);
+            cardData.textColor = encodeURIComponent(selectedColor.text);
+            
             setTimeout(() => {
               this.navigateToCardResult(cardData);
             }, 800);
@@ -159,8 +169,13 @@ Component({
         },
         fail: err => {
           console.error('文本云函数调用失败：', err);
-          // 云函数调用失败，使用默认文本直接跳转
+          // 云函数调用失败，使用默认文本和随机颜色直接跳转
           cardData.quote = encodeURIComponent('愿你内心平静，拥抱美好。');
+
+          // 使用本地随机颜色生成函数
+          const selectedColor = this.generateRandomColor();
+          cardData.backgroundColor = encodeURIComponent(selectedColor.background);
+          cardData.textColor = encodeURIComponent(selectedColor.text);
 
           // 延迟1秒后跳转，给用户更好的体验
           setTimeout(() => {
@@ -201,8 +216,7 @@ Component({
       }));
 
       const colorpsychologyParams = encodeURIComponent(JSON.stringify({
-        name: 'analyzeColor',
-        text: userText
+        useLocalRandomColor: true
       }));
 
       url += `&chatgptParams=${chatgptParams}&colorpsychologyParams=${colorpsychologyParams}`;
@@ -226,6 +240,6 @@ Component({
           }
         });
       }, 3000); // 等待3秒GIF动画播放完成
-    }
+    },
   }
 });

@@ -1,8 +1,8 @@
 {
   "cloud": true,
   "pages": [
-    "pages/index/index",
     "pages/text-input/index",
+    "pages/index/index",
     "pages/color-select/index",
     "pages/image-select/index",
     "pages/card-result/index",
