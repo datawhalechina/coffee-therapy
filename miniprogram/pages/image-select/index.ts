@@ -94,7 +94,7 @@ Component({
 6. 只输出这一句话，不要其他内容`,
           sessionId: 'img_' + Date.now(),
           model: 'deepseek-v3',
-          temperature: 0.7,
+          temperature: 1.0,
           max_tokens: 150
         },
         success: res => {
@@ -188,7 +188,7 @@ Component({
 5. 能引发职场人对生活的思考
 6. 只输出这一句话，不要其他内容`,
         model: 'deepseek-v3',
-        temperature: 0.7,
+        temperature: 1.0,
         max_tokens: 150
       }));
       

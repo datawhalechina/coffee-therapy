@@ -89,7 +89,7 @@ Component({
 - 不要添加引号、标点或其他说明性文字；`,
           sessionId: 'direct_' + Date.now(),
           model: 'deepseek-v3',
-          temperature: 0.8,
+          temperature: 1.0,
           max_tokens: 150
         },
         success: res => {
@@ -177,7 +177,7 @@ Component({
 - 不要添加引号、标点或其他说明性文字；`,
         sessionId: 'direct_' + Date.now(),
         model: 'deepseek-v3',
-        temperature: 0.8,
+        temperature: 1.0,
         max_tokens: 150
       }));
       

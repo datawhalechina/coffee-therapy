@@ -58,7 +58,7 @@ const COLOR_MEANING = {
 }
 
 // 调用阿里云DashScope API进行聊天补全
-async function chatCompletion(messages, model = 'deepseek-v3', temperature = 0.7, max_tokens = 1000) {
+async function chatCompletion(messages, model = 'deepseek-v3', temperature =1.0, max_tokens = 1000) {
   try {
     console.log('调用DashScope API开始，模型:', model);
     

@@ -151,7 +151,7 @@ Component({
 5. 适合职场场景，能引发内心共鸣。`,
             sessionId: 'color_' + Date.now(),
             model: 'deepseek-v3',
-            temperature: 0.7,
+            temperature: 1.0,
             max_tokens: 150
           },
           success: res => {
@@ -269,7 +269,7 @@ Component({
 4. 留有"空白"感，让用户自行投射与解读；
 5. 适合职场场景，能引发内心共鸣。`,
         model: 'deepseek-v3',
-        temperature: 0.7,
+        temperature: 1.0,
         max_tokens: 150
       }));
 
