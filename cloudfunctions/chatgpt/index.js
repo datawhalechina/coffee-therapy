@@ -303,7 +303,7 @@ exports.main = async (event, context) => {
             if (retryCount <= maxRetries) {
               // 如果不是最后一次重试，尝试切换模型
               if (modelUsed === 'deepseek-v3') {
-                modelUsed = 'qwen-plus';
+                modelUsed = 'deepseek-v3';
                 console.log(`切换到备用模型: ${modelUsed}`);
               } else {
                 modelUsed = 'deepseek-v3';

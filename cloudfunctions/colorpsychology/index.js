@@ -58,7 +58,7 @@ const COLOR_MEANING = {
 }
 
 // 调用阿里云DashScope API进行聊天补全
-async function chatCompletion(messages, model = 'qwen-plus-latest', temperature = 0.7, max_tokens = 1000) {
+async function chatCompletion(messages, model = 'deepseek-v3', temperature = 0.7, max_tokens = 1000) {
   try {
     console.log('调用DashScope API开始，模型:', model);
     
@@ -245,7 +245,7 @@ async function generateAffirmation(selectedColor) {
       }
     ];
 
-    const response = await chatCompletion(messages, 'qwen-plus-latest', 0.7, 100);
+    const response = await chatCompletion(messages, 'deepseek-v3', 0.7, 100);
     return response.choices[0].message.content.trim();
   } catch (error) {
     console.error('生成肯定短语失败:', error);
