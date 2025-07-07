@@ -1,0 +1,20 @@
+{
+  "name": "upload-rainbow-cards",
+  "version": "1.0.0",
+  "description": "上传彩虹疗愈卡片数据到云数据库",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wechat",
+    "cloud",
+    "database",
+    "rainbow-cards"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+} 

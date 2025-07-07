@@ -1,0 +1,61 @@
+<!--miniprogram/pages/upload-cards/index.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">疗愈卡片数据管理</text>
+    <text class="subtitle">上传数据到 rainbowcard 云数据库</text>
+  </view>
+
+  <view class="actions">
+    <button 
+      class="action-btn upload-btn" 
+      bindtap="uploadData" 
+      disabled="{{uploading}}"
+    >
+      {{uploading ? '上传中...' : '上传数据'}}
+    </button>
+    
+    <button 
+      class="action-btn validate-btn" 
+      bindtap="validateData"
+    >
+      验证数据
+    </button>
+    
+    <button 
+      class="action-btn clear-btn" 
+      bindtap="clearDatabase"
+    >
+      清空数据库
+    </button>
+  </view>
+
+  <view class="logs-section">
+    <view class="logs-header">
+      <text class="logs-title">操作日志</text>
+      <view class="logs-actions">
+        <button class="mini-btn" bindtap="copyLogs">复制</button>
+        <button class="mini-btn" bindtap="clearLogs">清空</button>
+      </view>
+    </view>
+    
+    <scroll-view class="logs-container" scroll-y="true" scroll-into-view="log-{{logs.length - 1}}">
+      <view wx:for="{{logs}}" wx:key="index" class="log-item" id="log-{{index}}">
+        {{item}}
+      </view>
+      <view wx:if="{{logs.length === 0}}" class="empty-logs">
+        暂无日志
+      </view>
+    </scroll-view>
+  </view>
+
+  <view wx:if="{{uploadResult}}" class="result-section">
+    <text class="result-title">上传结果</text>
+    <view class="result-content">
+      <text class="result-text">{{uploadResult.message}}</text>
+      <view wx:if="{{uploadResult.details.uploadResult}}" class="result-details">
+        <text>成功: {{uploadResult.details.uploadResult.success}} 条</text>
+        <text>失败: {{uploadResult.details.uploadResult.failed}} 条</text>
+      </view>
+    </view>
+  </view>
+</view> 

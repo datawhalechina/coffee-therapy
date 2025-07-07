@@ -125,8 +125,7 @@ Component({
 4. 留有"空白"感，让用户自行投射与解读；
 5. 适合职场场景，能引发内心共鸣。`,
           sessionId: 'text_' + Date.now(),
-          model: 'deepseek-v3',
-          temperature: 1.0,
+          model: 'ep-20250222115626-vcvd4',
           max_tokens: 200
         },
         success: res => {
@@ -210,8 +209,7 @@ Component({
 3. 富有温度与安全感，无需前置主题词；
 4. 留有"空白"感，让用户自行投射与解读；
 5. 适合职场场景，能引发内心共鸣。`,
-        model: 'deepseek-v3',
-        temperature: 1.0,
+        model: 'ep-20250222115626-vcvd4',
         max_tokens: 200
       }));
 

@@ -88,8 +88,6 @@ Component({
 - 中文不超过20个字，英文不超过20个单词；
 - 不要添加引号、标点或其他说明性文字；`,
           sessionId: 'direct_' + Date.now(),
-          model: 'deepseek-v3',
-          temperature: 1.0,
           max_tokens: 150
         },
         success: res => {
@@ -168,16 +166,10 @@ Component({
         name: 'sendMessage',
         message: `请生成一句"今日心理能量提示语"。
 要求如下：
-- 不使用自然意象（如光、水、风、树、花、星星等）；
-- 内容围绕"平静、接纳、觉察、放下、信任、成长、连接"等心理主题；
-- 语言风格简洁、诗意、哲理、留白，有温柔引导感，避免命令句；
-- 一次只输出一句完整句子；
 - 格式为：中文在前，英文在后；
 - 中文不超过20个字，英文不超过20个单词；
 - 不要添加引号、标点或其他说明性文字；`,
         sessionId: 'direct_' + Date.now(),
-        model: 'deepseek-v3',
-        temperature: 1.0,
         max_tokens: 150
       }));
       

@@ -6,6 +6,7 @@
     "pages/color-select/index",
     "pages/image-select/index",
     "pages/card-result/index",
+    "pages/upload-cards/index",
     "pages/logs/logs"
   ],
   "window": {

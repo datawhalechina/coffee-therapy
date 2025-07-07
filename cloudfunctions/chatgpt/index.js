@@ -1,6 +1,6 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
-const axios = require('axios')
+const OpenAI = require('openai')
 const fs = require('fs')
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
@@ -11,57 +11,62 @@ cloud.init({
 })
 
 // 获取API密钥
-const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY
+const ARK_API_KEY = process.env.ARK_API_KEY
 
-// 调用阿里云DashScope API进行聊天补全
-async function chatCompletion(messages, model = 'deepseek-v3', temperature = 1.0, max_tokens = 1000) {
+// 初始化OpenAI客户端
+const openai = new OpenAI({
+  apiKey: ARK_API_KEY,
+  baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
+})
+
+/**
+ * 调用字节跳动豆包API进行聊天补全
+ * @param {Array} messages - 对话消息数组
+ * @param {string} model - 模型名称，默认为 'ep-20250222115626-vcvd4'
+ * @param {number} temperature - 温度参数，默认为 1.0
+ * @param {number} max_tokens - 最大token数，默认为 1000
+ * @returns {Object} API响应数据
+ */
+async function chatCompletion(messages, model = 'ep-20250222115626-vcvd4', temperature = 1.0, max_tokens = 1000) {
   try {
-    console.log('调用DashScope API开始，模型:', model);
+    console.log('调用豆包API开始，模型:', model);
     console.log('请求参数:', JSON.stringify({
       model, 
       messages: messages.map(m => ({ role: m.role, content: m.content.substring(0, 20) + '...' }))
     }));
     
-    // 设置更长的超时时间
-    const response = await axios({
-      method: 'post',
-      url: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
-      headers: {
-        'Authorization': `Bearer ${DASHSCOPE_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      data: {
-        model: model,
-        messages: messages,
-        temperature: temperature,
-        max_tokens: max_tokens
-      },
-      timeout: 50000 // 50秒超时，比云函数的60秒小，确保有时间处理响应
+    // 使用OpenAI客户端调用API
+    const response = await openai.chat.completions.create({
+      model: model,
+      messages: messages,
+      temperature: temperature,
+      max_tokens: max_tokens,
+      timeout: 50000, // 50秒超时
+      // extra_body: {
+      //   thinking: {
+      //     type: "disabled" // 不使用深度思考能力
+      //     // type: "enabled" // 使用深度思考能力
+      //   }
+      // }
     });
     
-    console.log('DashScope API 响应成功，请求ID:', response.headers['x-request-id'] || '未知');
-    return response.data;
+    console.log('豆包API 响应成功');
+    return response;
   } catch (error) {
     // 详细记录错误信息
-    console.error('DashScope API调用失败:', {
+    console.error('豆包API调用失败:', {
       message: error.message,
       code: error.code,
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      responseData: error.response?.data,
-      config: {
-        url: error.config?.url,
-        method: error.config?.method,
-        timeout: error.config?.timeout
-      }
+      status: error.status,
+      type: error.type
     });
     
     // 构建更详细的错误信息
-    let errorMessage = 'DashScope API调用失败: ';
-    if (error.code === 'ECONNABORTED') {
+    let errorMessage = '豆包API调用失败: ';
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
       errorMessage += '请求超时，请稍后重试';
-    } else if (error.response) {
-      errorMessage += `服务器返回错误 [${error.response.status}]: ${JSON.stringify(error.response.data)}`;
+    } else if (error.status) {
+      errorMessage += `服务器返回错误 [${error.status}]: ${error.message}`;
     } else {
       errorMessage += error.message;
     }
@@ -134,6 +139,82 @@ async function getConversationHistory(userId, sessionId) {
   }
 }
 
+/**
+ * 从rainbowcard数据库随机获取3条疗愈卡片数据
+ * @returns {Array} 随机的3条卡片数据
+ */
+async function getRandomRainbowCards() {
+  try {
+    const db = cloud.database();
+    
+    // 获取所有卡片的总数
+    const countResult = await db.collection('rainbowcard').count();
+    const totalCount = countResult.total;
+    
+    if (totalCount < 3) {
+      console.log('数据库中卡片数量不足3条');
+      return [];
+    }
+    
+    // 生成3个随机数
+    const randomIndices = [];
+    while (randomIndices.length < 3) {
+      const randomIndex = Math.floor(Math.random() * totalCount);
+      if (!randomIndices.includes(randomIndex)) {
+        randomIndices.push(randomIndex);
+      }
+    }
+    
+    // 获取随机卡片数据
+    const randomCards = [];
+    for (const index of randomIndices) {
+      const result = await db.collection('rainbowcard')
+        .skip(index)
+        .limit(1)
+        .get();
+      
+      if (result.data && result.data.length > 0) {
+        randomCards.push(result.data[0]);
+      }
+    }
+    
+    console.log(`成功获取${randomCards.length}条随机卡片数据`);
+    return randomCards;
+  } catch (error) {
+    console.error('获取随机卡片数据失败:', error);
+    return [];
+  }
+}
+
+/**
+ * 构建包含随机卡片参考的prompt
+ * @param {string} originalMessage - 原始用户消息
+ * @returns {string} 包含参考数据的完整prompt
+ */
+async function buildPromptWithReference(originalMessage) {
+  try {
+    // 获取随机卡片数据
+    const randomCards = await getRandomRainbowCards();
+    
+    if (randomCards.length === 0) {
+      console.log('无法获取参考卡片数据，使用原始消息');
+      return originalMessage;
+    }
+    
+    // 构建参考内容
+    let referenceText = '\n\n参考如下：\n';
+    randomCards.forEach((card, index) => {
+      referenceText += `${index + 1}. ${card.content}\n   ${card.translation}\n`;
+    });
+    
+    // 拼接原始消息和参考内容
+    return originalMessage + referenceText;
+  } catch (error) {
+    console.error('构建带参考的prompt失败:', error);
+    return originalMessage;
+  }
+}
+
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
@@ -154,26 +235,21 @@ exports.main = async (event, context) => {
           };
         }
         
-        // 获取历史消息
-        let historyMessages = await getConversationHistory(wxContext.OPENID, currentSessionId);
+        // 构建包含随机卡片参考的prompt
+        const messageWithReference = await buildPromptWithReference(message);
         
-        // 如果没有系统消息，添加默认系统消息
-        if (historyMessages.length === 0 || historyMessages[0].role !== 'system') {
-          historyMessages = [
-            { role: 'system', content: '你是人工智能助手.' },
-            ...historyMessages
-          ];
-        }
-        
-        // 添加用户新消息
-        historyMessages.push({ role: 'user', content: message });
+        // 不携带历史消息，每次都是独立对话
+        const messages = [
+          { role: 'system', content: '你是人工智能助手.' },
+          { role: 'user', content: messageWithReference }
+        ];
         
         // 记录开始请求时间
         const startTime = Date.now();
         console.log(`开始请求，会话 ID: ${currentSessionId}`);
         
         let response;
-        let modelUsed = model || 'deepseek-v3';
+        let modelUsed = model || 'ep-20250222115626-vcvd4';
         let retryCount = 0;
         const maxRetries = 2;
         
@@ -182,7 +258,7 @@ exports.main = async (event, context) => {
           try {
             // 调用API获取回复
             response = await chatCompletion(
-              historyMessages, 
+              messages, 
               modelUsed,
               temperature || 1.0,
               max_tokens || 1000
@@ -194,11 +270,11 @@ exports.main = async (event, context) => {
             
             if (retryCount <= maxRetries) {
               // 如果不是最后一次重试，尝试切换模型
-              if (modelUsed === 'deepseek-v3') {
-                modelUsed = 'mixtral-8x7b';
+              if (modelUsed === 'ep-20250222115626-vcvd4') {
+                modelUsed = 'ep-20250222115626-vcvd4';
                 console.log(`切换到备用模型: ${modelUsed}`);
               } else {
-                modelUsed = 'deepseek-v3-250324';
+                modelUsed = 'ep-20250222115626-vcvd4';
                 console.log(`切换回默认模型: ${modelUsed}`);
               }
               
@@ -224,9 +300,7 @@ exports.main = async (event, context) => {
                 isFallbackResponse: true
               };
               
-              // 保存用户消息但不保存模拟响应
-              // 这样用户可以稍后再试而不会丢失上下文
-              await saveConversation(wxContext.OPENID, currentSessionId, historyMessages);
+              // 不保存对话历史，每次都是独立对话
               
               return {
                 success: true,
@@ -243,20 +317,17 @@ exports.main = async (event, context) => {
         console.log(`请求完成，用时: ${(endTime - startTime) / 1000} 秒`);
         console.log(`使用模型: ${modelUsed}, 重试次数: ${retryCount}`);
         
-        // 添加AI回复到历史
+        // 获取AI回复
         const assistantMessage = response.choices[0].message;
-        historyMessages.push(assistantMessage);
         
-        // 保存对话历史
-        await saveConversation(wxContext.OPENID, currentSessionId, historyMessages);
+        // 不保存对话历史，每次都是独立对话
         
         return {
           success: true,
           reply: assistantMessage.content,
           usage: response.usage,
           model: modelUsed,
-          responseTime: (endTime - startTime) / 1000,
-          history: historyMessages
+          responseTime: (endTime - startTime) / 1000
         };
       } catch (error) {
         console.error('处理消息失败:', error);
@@ -276,12 +347,20 @@ exports.main = async (event, context) => {
           };
         }
         
+        // 修改最后一条用户消息，添加随机卡片参考
+        const modifiedMessages = [...messages];
+        const lastMessage = modifiedMessages[modifiedMessages.length - 1];
+        if (lastMessage && lastMessage.role === 'user') {
+          const messageWithReference = await buildPromptWithReference(lastMessage.content);
+          lastMessage.content = messageWithReference;
+        }
+        
         // 记录开始请求时间
         const startTime = Date.now();
         console.log(`开始 chat 请求，会话 ID: ${currentSessionId || '无'}`);
         
         let response;
-        let modelUsed = model || 'deepseek-v3';
+        let modelUsed = model || 'ep-20250222115626-vcvd4';
         let retryCount = 0;
         const maxRetries = 2;
         
@@ -290,7 +369,7 @@ exports.main = async (event, context) => {
           try {
             // 调用API获取回复
             response = await chatCompletion(
-              messages, 
+              modifiedMessages, 
               modelUsed,
               temperature || 1.0,
               max_tokens || 1000
@@ -302,11 +381,11 @@ exports.main = async (event, context) => {
             
             if (retryCount <= maxRetries) {
               // 如果不是最后一次重试，尝试切换模型
-              if (modelUsed === 'deepseek-v3') {
-                modelUsed = 'deepseek-v3';
+              if (modelUsed === 'ep-20250222115626-vcvd4') {
+                modelUsed = 'ep-20250222115626-vcvd4';
                 console.log(`切换到备用模型: ${modelUsed}`);
               } else {
-                modelUsed = 'deepseek-v3';
+                modelUsed = 'ep-20250222115626-vcvd4';
                 console.log(`切换回默认模型: ${modelUsed}`);
               }
               
@@ -334,11 +413,7 @@ exports.main = async (event, context) => {
         // 获取AI回复
         const assistantMessage = response.choices[0].message;
         
-        // 如果有会话 ID，保存对话
-        if (currentSessionId) {
-          const updatedMessages = [...messages, assistantMessage];
-          await saveConversation(wxContext.OPENID, currentSessionId, updatedMessages);
-        }
+        // 不保存对话历史，每次都是独立对话
         
         return {
           success: true,
